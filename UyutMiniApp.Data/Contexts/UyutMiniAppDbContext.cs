@@ -34,9 +34,9 @@ namespace UyutMiniApp.Data.Contexts
 
             // Optional: restrict deletes where needed (to prevent cascade issues)
 
-            modelBuilder.Entity<SetItem>()
-                .HasOne(si => si.IncludedItem)
-                .WithMany()
+            modelBuilder.Entity<MenuItem>()
+                .HasMany(si => si.SetItems)
+                .WithOne()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SetItemReplacementOption>()

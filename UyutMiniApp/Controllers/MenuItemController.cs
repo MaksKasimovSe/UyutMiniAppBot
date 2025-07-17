@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UyutMiniApp.Service.DTOs.MenuItems;
+using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
+using System.IO;
 
 namespace UyutMiniApp.Controllers
 {
@@ -12,8 +14,22 @@ namespace UyutMiniApp.Controllers
             Ok(await menuItemService.GetAllAsync(search));
 
         [HttpPost]
-        public async Task AddAsync(CreateMenuItemDto dto) =>
-            await menuItemService.CreateAsync(dto);
+        public async Task AddAsync([FromForm] CreateMenuItemDto dto)
+        {
+            string fileName = Guid.NewGuid().ToString("N") + ".png";
+            string filePath = Path.Combine(EnvironmentHelper.AttachmentPath, fileName);
+            
+            if (!Directory.Exists(EnvironmentHelper.AttachmentPath))
+                Directory.CreateDirectory(EnvironmentHelper.AttachmentPath);
+            
+            FileStream fileStream = System.IO.File.OpenWrite(filePath);
+            
+            await dto.Image.CopyToAsync(fileStream);
 
+            await fileStream.FlushAsync();
+            fileStream.Close();
+            dto.ImageUrl = $"/images/{fileName}";
+            await menuItemService.CreateAsync(dto);
+        }
     }
 }

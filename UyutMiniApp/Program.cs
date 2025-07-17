@@ -60,6 +60,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseCors("AllowAll");
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
