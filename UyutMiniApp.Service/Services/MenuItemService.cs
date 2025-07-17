@@ -14,6 +14,7 @@ namespace UyutMiniApp.Service.Services
     {
         public async Task CreateAsync(CreateMenuItemDto dto)
         {
+            var menuItem = dto.Adapt<MenuItem>();
             await genericRepository.CreateAsync(dto.Adapt<MenuItem>());
             await genericRepository.SaveChangesAsync();
         }

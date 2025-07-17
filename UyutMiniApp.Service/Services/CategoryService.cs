@@ -12,9 +12,10 @@ namespace UyutMiniApp.Service.Services
     {
         public async Task AddAsync(CreateCategoryDto dto)
         {
-            var existCategory = await repository.GetAsync(c => c.Name == dto.Name, includes: ["MenuItems", "Ingredients"]);
+            var existCategory = await repository.GetAsync(c => c.Name == dto.Name);
             if (existCategory is not null)
                 throw new HttpStatusCodeException(400, "Category with given name already exist");
+            var category = dto.Adapt<Category>();
 
             await repository.CreateAsync(dto.Adapt<Category>());
             await repository.SaveChangesAsync();
