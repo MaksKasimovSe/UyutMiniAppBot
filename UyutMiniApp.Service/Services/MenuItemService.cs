@@ -14,10 +14,6 @@ namespace UyutMiniApp.Service.Services
     {
         public async Task CreateAsync(CreateMenuItemDto dto)
         {
-            if (dto.IsSet)
-                if (dto.SetItems is null || dto.SetItems.Count <= 1)
-                    throw new HttpStatusCodeException(400, "Set items should have at least 2 elements");
-
             await genericRepository.CreateAsync(dto.Adapt<MenuItem>());
             await genericRepository.SaveChangesAsync();
         }
