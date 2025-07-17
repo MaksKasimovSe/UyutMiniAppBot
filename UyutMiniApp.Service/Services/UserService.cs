@@ -1,0 +1,74 @@
+﻿using Mapster;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using UyutMiniApp.Data.IRepositories;
+using UyutMiniApp.Domain.Entities;
+using UyutMiniApp.Service.DTOs.Users;
+using UyutMiniApp.Service.Exceptions;
+using UyutMiniApp.Service.Interfaces;
+
+namespace UyutMiniApp.Service.Services
+{
+    public class UserService(IGenericRepository<User> genericRepository, IConfiguration configuration) : IUserService
+    {
+        public async Task AddAsync(CreateUserDto dto)
+        {
+            var existUser = await genericRepository.GetAsync(u => u.TelegramUserId == dto.TelegramUserId || u.PhoneNumber == dto.PhoneNumber);
+
+            if (existUser != null)
+                throw new HttpStatusCodeException(400, "Phone number or telegram account already registered");
+
+            await genericRepository.CreateAsync(dto.Adapt<User>());
+            await genericRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var isDeleted = await genericRepository.DeleteAsync(u => u.Id == id);
+            if (!isDeleted)
+                throw new HttpStatusCodeException(404, "User not found");
+            await genericRepository.SaveChangesAsync();
+        }
+
+        public async Task<string> GenerateToken(long telegramUserId, string phoneNumber)
+        {
+            var existUser =
+                await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId
+                || u.PhoneNumber == phoneNumber);
+            if (existUser is null)
+                throw new HttpStatusCodeException(400, "User already exist");
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            byte[] tokenKey = Encoding.UTF8.GetBytes(configuration["JWT:Key"]);
+
+            SecurityTokenDescriptor tokenDescription = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim("Id", existUser.Id.ToString()),
+                    new Claim("TelegramUserId", existUser.TelegramUserId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddMonths(int.Parse(configuration["JWT:lifetime"])),
+                Issuer = configuration["JWT:Issuer"],
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescription);
+
+            return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<ViewUserDto> GetAsync(long telegramUserId)
+        {
+            var user = await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId);
+            if (user is null)
+                throw new HttpStatusCodeException(404, "User not found");
+
+            return user.Adapt<ViewUserDto>();
+        }
+    }
+}

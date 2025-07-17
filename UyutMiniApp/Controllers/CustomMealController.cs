@@ -1,0 +1,19 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using UyutMiniApp.Service.DTOs.CustomMeals;
+using UyutMiniApp.Service.Interfaces;
+
+namespace UyutMiniApp.Controllers
+{
+    [ApiController, Route("[controller]")]
+    public class CustomMealController(ICustomMealService customMealService) : ControllerBase
+    {
+        [HttpPost, Authorize]
+        public async Task AddAsync(CreateCustomMealDto dto) =>
+            await customMealService.AddAsync(dto);
+
+        [HttpGet("id"), Authorize]
+        public async Task<IActionResult> GetAsync(Guid id) =>
+            Ok(await customMealService.GetAsync(id));
+    }
+}
