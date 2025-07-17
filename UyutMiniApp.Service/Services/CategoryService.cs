@@ -44,7 +44,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<List<ViewCategoryDto>> GetAllAsync()
         {
-            var categories = repository.GetAll(false, includes: [ "MenuItems", "Ingredients"]);
+            var categories = repository.GetAll(false, includes: [ "MenuItems", "Ingredients", "MenuItems.SetItems", "MenuItems.SetItems.ReplacementOptions"]);
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
 
