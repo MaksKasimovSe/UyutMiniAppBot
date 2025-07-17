@@ -8,7 +8,7 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class CustomMealController(ICustomMealService customMealService) : ControllerBase
     {
-        [HttpPost, Authorize]
+        [HttpPost, Authorize("Admin")]
         public async Task AddAsync(CreateCustomMealDto dto) =>
             await customMealService.AddAsync(dto);
 

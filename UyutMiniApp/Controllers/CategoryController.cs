@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Threading.Tasks;
 using UyutMiniApp.Service.DTOs.Category;
@@ -9,7 +10,7 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class CategoryController(ICategoryService categoryService) : ControllerBase
     {
-        [HttpPost]
+        [HttpPost, Authorize("Admin")]
         public async Task AddAsync(CreateCategoryDto dto) =>
             await categoryService.AddAsync(dto);
 

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
 using UyutMiniApp.Data.Contexts;
+using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Extensions;
 using UyutMiniApp.Helpers;
 using UyutMiniApp.Middlewares;
 using UyutMiniApp.Service.Helpers;
+using UyutMiniApp.Signalr;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<UyutMiniAppDbContext>(option =>
     option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddSignalR();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -42,6 +46,15 @@ builder.Services.AddControllers(options =>
                                  new ConfigureApiUrlName()));
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserPolicy", policy => policy.RequireRole(
+        Enum.GetName(Role.User)));
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole(
+        Enum.GetName(Role.Admin),
+              Enum.GetName(Role.User)));
+});
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -56,7 +69,13 @@ if (app.Services.GetService<IHttpContextAccessor>() != null)
 
 app.UseHttpsRedirection();
 
+
+
+
 app.UseAuthentication();
+
+
+app.MapHub<ChatHub>("/chathub").RequireAuthorization();
 
 app.UseAuthorization();
 

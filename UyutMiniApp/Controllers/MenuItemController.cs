@@ -3,6 +3,7 @@ using UyutMiniApp.Service.DTOs.MenuItems;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UyutMiniApp.Controllers
 {
@@ -13,7 +14,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> GetAllAsync([FromQuery]string search = "") =>
             Ok(await menuItemService.GetAllAsync(search));
 
-        [HttpPost]
+        [HttpPost, Authorize("Admin")]
         public async Task AddAsync([FromForm] CreateMenuItemDto dto)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".png";

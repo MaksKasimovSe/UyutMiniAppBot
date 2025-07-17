@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UyutMiniApp.Service.DTOs.Couriers;
 using UyutMiniApp.Service.DTOs.Users;
 using UyutMiniApp.Service.Interfaces;
@@ -8,7 +9,7 @@ namespace UyutMiniApp.Controllers
     [ApiController,Route("[controller]")]
     public class CourierController(ICourierService courierService) : ControllerBase
     {
-        [HttpPost("register")]
+        [HttpPost("register"), Authorize("Admin")]
         public async Task AddAsync(CreateCourierDto dto) =>
             await courierService.CreateAsync(dto);
 
@@ -16,7 +17,7 @@ namespace UyutMiniApp.Controllers
         public async Task LoginAsync(LoginUserDto dto) =>
             Ok(await courierService.GenerateToken(dto.TelegramUserId, dto.PhoneNumber));
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize("Admin")]
         public async Task UpdateAsync(Guid id, UpdateCourierDto dto) =>
             await courierService.UpdateAsync(id, dto);
 
@@ -24,7 +25,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> GetAsync(long telegramUserId) =>
             Ok(await courierService.GetByIdAsync(telegramUserId));
         
-        [HttpGet]
+        [HttpGet, Authorize("Admin")]
         public async Task<IActionResult> GetAllAsync() =>
             Ok(await courierService.GetAllAsync());
     }

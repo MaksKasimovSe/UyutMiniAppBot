@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
+using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Users;
 using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Interfaces;
@@ -50,7 +51,8 @@ namespace UyutMiniApp.Service.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("Id", existUser.Id.ToString()),
-                    new Claim("TelegramUserId", existUser.TelegramUserId.ToString())
+                    new Claim("TelegramUserId", existUser.TelegramUserId.ToString()),
+                    new Claim("Role", existUser.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMonths(int.Parse(configuration["JWT:lifetime"])),
                 Issuer = configuration["JWT:Issuer"],
