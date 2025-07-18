@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UyutMiniApp.Domain.Commons;
+﻿using UyutMiniApp.Domain.Commons;
 
 namespace UyutMiniApp.Domain.Entities
 {

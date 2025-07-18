@@ -19,7 +19,7 @@ namespace UyutMiniApp.Controllers
             Ok(await userService.GenerateToken(dto.TelegramUserId, dto.PhoneNumber));
 
         [HttpGet("{telegramUserId}")]
-        public async Task<IActionResult> GetAsync(long telegramUserId) 
+        public async Task<IActionResult> GetAsync(long telegramUserId)
             => Ok(await userService.GetAsync(telegramUserId));
     }
 }

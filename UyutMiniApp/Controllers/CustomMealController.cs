@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.CustomMeals;
 using UyutMiniApp.Service.Interfaces;
 

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
-using System.Security.Claims;
 using UyutMiniApp.Data.Contexts;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Extensions;
@@ -80,14 +79,14 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+
+app.MapHub<ChatHub>("/chathub").RequireAuthorization();
+app.MapHub<OrderCheckHub>("/orderchekhub").RequireAuthorization();
+
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-
-app.MapHub<ChatHub>("/chathub").RequireAuthorization();
-app.MapHub<OrderCheckHub>("/orderchekhub").RequireAuthorization();
 
 app.MapControllers();
 

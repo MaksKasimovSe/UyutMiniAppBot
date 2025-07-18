@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
-using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Users;
 using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Interfaces;

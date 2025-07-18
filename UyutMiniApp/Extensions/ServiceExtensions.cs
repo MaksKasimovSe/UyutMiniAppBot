@@ -23,7 +23,7 @@ namespace UyutMiniApp.Extensions
             services.AddScoped<IGenericRepository<MenuItem>, GenericRepository<MenuItem>>();
             services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
             services.AddScoped<IGenericRepository<SavedAddress>, GenericRepository<SavedAddress>>();
-           
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICategoryService, CategoryService>();
@@ -31,7 +31,7 @@ namespace UyutMiniApp.Extensions
             services.AddScoped<ICustomMealService, CustomMealService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IMenuItemService, MenuItemService>();
-            
+            services.AddScoped<IIngredientService, IngredientService>();
         }
 
         public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UyutMiniApp.Service.Helpers
+﻿namespace UyutMiniApp.Service.Helpers
 {
     public class FileHelper
     {

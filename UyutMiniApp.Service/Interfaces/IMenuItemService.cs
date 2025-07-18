@@ -1,8 +1,8 @@
 ﻿using UyutMiniApp.Service.DTOs.MenuItems;
 
 namespace UyutMiniApp.Service.Interfaces
-{ 
-    public interface IMenuItemService 
+{
+    public interface IMenuItemService
     {
         Task CreateAsync(CreateMenuItemDto dto);
         Task UpdateAsync(Guid id, UpdateMenuItemDto dto);

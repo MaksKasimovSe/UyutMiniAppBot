@@ -1,5 +1,4 @@
-﻿using UyutMiniApp.Domain.Entities;
-using UyutMiniApp.Service.DTOs.CustomMeals;
+﻿using UyutMiniApp.Service.DTOs.CustomMeals;
 
 namespace UyutMiniApp.Service.Interfaces
 {

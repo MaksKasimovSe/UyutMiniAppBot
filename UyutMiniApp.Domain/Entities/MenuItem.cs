@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using UyutMiniApp.Domain.Commons;
+﻿using UyutMiniApp.Domain.Commons;
 
 namespace UyutMiniApp.Domain.Entities
 {

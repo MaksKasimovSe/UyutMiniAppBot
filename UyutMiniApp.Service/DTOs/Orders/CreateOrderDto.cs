@@ -1,4 +1,3 @@
-using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.DeliveryInfos;
 using UyutMiniApp.Service.DTOs.OrderItems;

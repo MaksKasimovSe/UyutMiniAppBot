@@ -1,5 +1,4 @@
-﻿using UyutMiniApp.Domain.Entities;
-using UyutMiniApp.Service.DTOs.Couriers;
+﻿using UyutMiniApp.Service.DTOs.Couriers;
 
 namespace UyutMiniApp.Service.Interfaces
 {

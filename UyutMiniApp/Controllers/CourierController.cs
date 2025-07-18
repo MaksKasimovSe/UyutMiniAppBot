@@ -6,7 +6,7 @@ using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Controllers
 {
-    [ApiController,Route("[controller]")]
+    [ApiController, Route("[controller]")]
     public class CourierController(ICourierService courierService) : ControllerBase
     {
         [HttpPost("register"), Authorize(Roles = "Admin")]
@@ -24,7 +24,7 @@ namespace UyutMiniApp.Controllers
         [HttpGet("{telegramUserId}")]
         public async Task<IActionResult> GetAsync(long telegramUserId) =>
             Ok(await courierService.GetByIdAsync(telegramUserId));
-        
+
         [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAsync() =>
             Ok(await courierService.GetAllAsync());

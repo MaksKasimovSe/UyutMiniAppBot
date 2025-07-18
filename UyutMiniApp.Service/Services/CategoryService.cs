@@ -1,11 +1,11 @@
-﻿using UyutMiniApp.Data.IRepositories;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
+using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.Category;
 using UyutMiniApp.Service.Exceptions;
-using UyutMiniApp.Service.Interfaces;
-using Mapster;
-using Microsoft.EntityFrameworkCore;
 using UyutMiniApp.Service.Helpers;
+using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Service.Services
 {
@@ -27,7 +27,7 @@ namespace UyutMiniApp.Service.Services
             var existCategory = await repository.GetAsync(c => c.Id == id);
 
             if (existCategory is not null)
-                throw new HttpStatusCodeException(404,"Category does not exist");
+                throw new HttpStatusCodeException(404, "Category does not exist");
 
             await repository.DeleteAsync(c => c.Id == id);
             await repository.SaveChangesAsync();
@@ -46,7 +46,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<List<ViewCategoryDto>> GetAllAsync()
         {
-            var categories = repository.GetAll(false, includes: [ "MenuItems", "Ingredients", "MenuItems.SetItems", "MenuItems.SetItems.ReplacementOptions"]);
+            var categories = repository.GetAll(false, includes: ["MenuItems", "Ingredients", "MenuItems.SetItems", "MenuItems.SetItems.ReplacementOptions"]);
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
             var role = HttpContextHelper.Role;

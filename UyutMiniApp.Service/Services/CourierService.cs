@@ -18,8 +18,8 @@ namespace UyutMiniApp.Service.Services
         public async Task CreateAsync(CreateCourierDto dto)
         {
             var existCourier = await genericRepository.GetAsync(c => c.PhoneNumber == dto.PhoneNumber);
-            if (existCourier is not null) 
-                throw new HttpStatusCodeException(400,"Couries with this number already exist");
+            if (existCourier is not null)
+                throw new HttpStatusCodeException(400, "Couries with this number already exist");
 
             await genericRepository.CreateAsync(dto.Adapt<Courier>());
             await genericRepository.SaveChangesAsync();
@@ -29,7 +29,7 @@ namespace UyutMiniApp.Service.Services
         {
             var res = await genericRepository.DeleteAsync(c => c.Id == id);
             if (!res)
-                throw new HttpStatusCodeException(404,"Courier not found");
+                throw new HttpStatusCodeException(404, "Courier not found");
 
             await genericRepository.SaveChangesAsync();
         }
@@ -75,8 +75,8 @@ namespace UyutMiniApp.Service.Services
             var courier = await genericRepository.GetAsync(c => c.TelegramUserId == telegramUserId);
 
             if (courier is null)
-                throw new HttpStatusCodeException(404, "Courier not found");  
-            
+                throw new HttpStatusCodeException(404, "Courier not found");
+
             var dtoCourier = courier.Adapt<ViewCourierDto>();
             return dtoCourier;
         }

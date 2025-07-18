@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using UyutMiniApp.Service.Exceptions;
+﻿using UyutMiniApp.Service.Exceptions;
 
 namespace UyutMiniApp.Middlewares
 {

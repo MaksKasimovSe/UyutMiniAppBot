@@ -26,7 +26,7 @@ namespace UyutMiniApp.Service.Services
             var customMeal = await genericRepository.GetAsync(c => c.Id == id);
 
             if (customMeal is null)
-                throw new HttpStatusCodeException(404,"Custom meal dto");
+                throw new HttpStatusCodeException(404, "Custom meal dto");
 
             return customMeal.Adapt<ViewCustomMealDto>();
         }

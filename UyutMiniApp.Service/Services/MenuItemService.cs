@@ -1,10 +1,8 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.MenuItems;
-using UyutMiniApp.Service.DTOs.SetItems;
 using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Interfaces;
 
@@ -23,7 +21,7 @@ namespace UyutMiniApp.Service.Services
         {
             var isDeleted = await genericRepository.DeleteAsync(c => c.Id == id);
             if (!isDeleted)
-                throw new HttpStatusCodeException(404,"Category not found");
+                throw new HttpStatusCodeException(404, "Category not found");
 
             await genericRepository.SaveChangesAsync();
         }

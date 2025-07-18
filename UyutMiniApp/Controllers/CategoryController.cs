@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System.Threading.Tasks;
 using UyutMiniApp.Service.DTOs.Category;
 using UyutMiniApp.Service.Interfaces;
 
