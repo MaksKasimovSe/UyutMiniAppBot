@@ -11,13 +11,13 @@ namespace UyutMiniApp.Controllers
 {
     
     [ApiController, Route("[controller]")]
-    public class OrderController(IOrderService orderService, IHubContext<ChatHub> hubContext) : ControllerBase
+    public class OrderController(IOrderService orderService, IHubContext<ChatHub> hubContext, IHubContext<OrderCheckHub> orderCheckHub) : ControllerBase
     {
         [HttpPost, Authorize]
         public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto) =>
             Ok(await orderService.CreateAsync(createOrderDto));
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}"), Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetAsync(Guid id) =>
             Ok(await orderService.GetAsync(id));
 

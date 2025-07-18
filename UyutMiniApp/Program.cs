@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
+using System.Security.Claims;
 using UyutMiniApp.Data.Contexts;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Extensions;
@@ -45,21 +46,29 @@ builder.Services.AddControllers(options =>
     options.Conventions.Add(actionModelConvention: new RouteTokenTransformerConvention(
                                  new ConfigureApiUrlName()));
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("UserPolicy", policy => policy.RequireRole(
+    options.AddPolicy("User", policy => policy.RequireRole(
         Enum.GetName(Role.User)));
-    options.AddPolicy("AdminPolicy", policy => policy.RequireRole(
-        Enum.GetName(Role.Admin),
-              Enum.GetName(Role.User)));
+    options.AddPolicy("Admin", policy => policy.RequireRole(
+        Enum.GetName(Role.Admin)));
 });
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
 app.UseStaticFiles();
 
 EnvironmentHelper.WebRootPath = app.Services.GetRequiredService<IWebHostEnvironment>()?.WebRootPath;
@@ -72,16 +81,17 @@ app.UseHttpsRedirection();
 
 
 
-app.UseAuthentication();
 
-
-app.MapHub<ChatHub>("/chathub").RequireAuthorization();
-
-app.UseAuthorization();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors("AllowAll");
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+app.MapHub<ChatHub>("/chathub").RequireAuthorization();
+app.MapHub<OrderCheckHub>("/orderchekhub").RequireAuthorization();
 
 app.MapControllers();
 

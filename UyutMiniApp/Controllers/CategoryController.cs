@@ -10,7 +10,7 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class CategoryController(ICategoryService categoryService) : ControllerBase
     {
-        [HttpPost, Authorize("Admin")]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task AddAsync(CreateCategoryDto dto) =>
             await categoryService.AddAsync(dto);
 

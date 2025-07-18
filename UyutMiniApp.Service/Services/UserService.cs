@@ -40,11 +40,11 @@ namespace UyutMiniApp.Service.Services
                 await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId
                 || u.PhoneNumber == phoneNumber);
             if (existUser is null)
-                throw new HttpStatusCodeException(400, "User already exist");
+                throw new HttpStatusCodeException(404, "User not found");
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
-            byte[] tokenKey = Encoding.UTF8.GetBytes(configuration["JWT:Key"]);
+            byte[] tokenKey = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]);
 
             SecurityTokenDescriptor tokenDescription = new SecurityTokenDescriptor
             {
@@ -52,10 +52,10 @@ namespace UyutMiniApp.Service.Services
                 {
                     new Claim("Id", existUser.Id.ToString()),
                     new Claim("TelegramUserId", existUser.TelegramUserId.ToString()),
-                    new Claim("Role", existUser.Role.ToString())
+                    new Claim(ClaimTypes.Role, Enum.GetName(existUser.Role))
                 }),
-                Expires = DateTime.UtcNow.AddMonths(int.Parse(configuration["JWT:lifetime"])),
-                Issuer = configuration["JWT:Issuer"],
+                Expires = DateTime.UtcNow.AddMonths(int.Parse(configuration["Jwt:lifetime"])),
+                Issuer = configuration["Jwt:Issuer"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
 

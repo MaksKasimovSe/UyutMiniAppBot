@@ -14,7 +14,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> GetAllAsync([FromQuery]string search = "") =>
             Ok(await menuItemService.GetAllAsync(search));
 
-        [HttpPost, Authorize("Admin")]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task AddAsync([FromForm] CreateMenuItemDto dto)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".png";

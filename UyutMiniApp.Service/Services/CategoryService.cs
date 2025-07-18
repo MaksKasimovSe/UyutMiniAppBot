@@ -5,6 +5,7 @@ using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Interfaces;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using UyutMiniApp.Service.Helpers;
 
 namespace UyutMiniApp.Service.Services
 {
@@ -48,7 +49,7 @@ namespace UyutMiniApp.Service.Services
             var categories = repository.GetAll(false, includes: [ "MenuItems", "Ingredients", "MenuItems.SetItems", "MenuItems.SetItems.ReplacementOptions"]);
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
-
+            var role = HttpContextHelper.Role;
             return viewCategories;
         }
     }
