@@ -87,7 +87,7 @@ app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseWebSockets();
 app.MapControllers();
 
 app.Run();

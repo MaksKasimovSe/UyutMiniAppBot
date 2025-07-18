@@ -9,5 +9,4 @@ public class ViewSetReplacementSelectionDto
     public Guid OriginalSetItemId { get; set; }
     public Guid ReplacementMenuItemId { get; set; }
     public ICollection<ViewSetItemReplacementOptionDto> ReplacementOptions { get; set; }
-
 }
