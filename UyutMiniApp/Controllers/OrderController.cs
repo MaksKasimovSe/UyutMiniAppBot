@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.Orders;
+using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 using UyutMiniApp.Signalr;
 
@@ -14,8 +17,12 @@ namespace UyutMiniApp.Controllers
     public class OrderController(IOrderService orderService, IHubContext<ChatHub> hubContext, IHubContext<OrderCheckHub> orderCheckHub) : ControllerBase
     {
         [HttpPost, Authorize]
-        public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto) =>
-            Ok(await orderService.CreateAsync(createOrderDto));
+        public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto)
+        {
+            var res = await orderService.CreateAsync(createOrderDto);
+            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", HttpContextHelper.TelegramId, JsonConvert.SerializeObject(createOrderDto));
+            return Ok(res);
+        }
 
         [HttpGet("{id}"), Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetAsync(Guid id) =>

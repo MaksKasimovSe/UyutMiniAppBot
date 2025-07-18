@@ -78,10 +78,6 @@ if (app.Services.GetService<IHttpContextAccessor>() != null)
 
 app.UseHttpsRedirection();
 
-
-
-
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors("AllowAll");
