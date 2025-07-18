@@ -12,7 +12,7 @@ namespace UyutMiniApp.Controllers
         public async Task AddAsync(CreateCustomMealDto dto) =>
             await customMealService.AddAsync(dto);
 
-        [HttpGet("id"), Authorize(Roles = "User")]
+        [HttpGet("{id}"), Authorize(Roles = "User")]
         public async Task<IActionResult> GetAsync(Guid id) =>
             Ok(await customMealService.GetAsync(id));
     }
