@@ -68,6 +68,15 @@ namespace UyutMiniApp.Data.Contexts
                 .HasOne(s => s.ReplacementMenuItem)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Category>()
+                .HasMany(s => s.MenuItems)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Category>()
+                .HasMany(s => s.Ingredients)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

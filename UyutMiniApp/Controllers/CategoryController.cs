@@ -15,5 +15,9 @@ namespace UyutMiniApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCategories() =>
             Ok(await categoryService.GetAllAsync());
+
+        [HttpDelete("{id}")]
+        public async Task DeleteAsync(Guid id) =>
+            await categoryService.DeleteAsync(id);
     }
 }
