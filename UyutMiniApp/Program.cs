@@ -79,15 +79,17 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
+
+app.MapControllers();
 app.MapHub<ChatHub>("/chathub").RequireAuthorization();
 app.MapHub<OrderCheckHub>("/orderchekhub").RequireAuthorization();
 
+
 app.UseCors("AllowAll");
 
-app.UseAuthentication();
-app.UseAuthorization();
 app.UseWebSockets();
-app.MapControllers();
 
 app.Run();
