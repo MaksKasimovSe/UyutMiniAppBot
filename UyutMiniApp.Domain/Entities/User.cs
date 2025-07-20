@@ -9,6 +9,7 @@ namespace UyutMiniApp.Domain.Entities
         public string Name { get; set; }
         public long TelegramUserId { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public Guid? SavedAddressId { get; set; }
         public SavedAddress SavedAddress { get; set; }
         public Role Role { get; set; }
     }

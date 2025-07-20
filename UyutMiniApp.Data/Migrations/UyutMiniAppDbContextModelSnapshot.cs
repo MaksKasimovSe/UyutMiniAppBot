@@ -42,7 +42,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Courier", b =>
@@ -74,7 +74,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Couriers");
+                    b.ToTable("Couriers", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.CustomMeal", b =>
@@ -97,7 +97,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomMeals");
+                    b.ToTable("CustomMeals", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.CustomMealIngredient", b =>
@@ -133,7 +133,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("IngredientId");
 
-                    b.ToTable("CustomMealIngredients");
+                    b.ToTable("CustomMealIngredients", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.DeliveryInfo", b =>
@@ -174,7 +174,7 @@ namespace UyutMiniApp.Data.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("DeliveryInfos");
+                    b.ToTable("DeliveryInfos", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Ingredient", b =>
@@ -217,7 +217,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.IngredientRecommendation", b =>
@@ -241,7 +241,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("SourceIngredientId");
 
-                    b.ToTable("IngredientRecommendations");
+                    b.ToTable("IngredientRecommendations", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.MenuItem", b =>
@@ -278,7 +278,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("MenuItems");
+                    b.ToTable("MenuItems", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Order", b =>
@@ -317,7 +317,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.OrderItem", b =>
@@ -349,7 +349,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.SavedAddress", b =>
@@ -378,7 +378,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SavedAddresses");
+                    b.ToTable("SavedAddresses", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.SetItem", b =>
@@ -408,7 +408,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("MenuItemId");
 
-                    b.ToTable("SetItems");
+                    b.ToTable("SetItems", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.SetItemReplacementOption", b =>
@@ -435,7 +435,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("SetItemId");
 
-                    b.ToTable("SetItemReplacementOptions");
+                    b.ToTable("SetItemReplacementOptions", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.SetReplacementSelection", b =>
@@ -467,7 +467,7 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasIndex("ReplacementMenuItemId");
 
-                    b.ToTable("SetReplacementSelections");
+                    b.ToTable("SetReplacementSelections", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.User", b =>
@@ -504,7 +504,7 @@ namespace UyutMiniApp.Data.Migrations
                     b.HasIndex("TelegramUserId")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.CustomMealIngredient", b =>

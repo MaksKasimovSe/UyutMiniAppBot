@@ -1,29 +1,56 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.Orders;
 using UyutMiniApp.Service.Exceptions;
+using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Service.Services
 {
-    public class OrderService(IGenericRepository<Order> genericRepository, IGenericRepository<SavedAddress> addressRepository) : IOrderService
+    public class OrderService(IGenericRepository<Order> genericRepository, 
+        IGenericRepository<SavedAddress> addressRepository,
+        IGenericRepository<User> userRepository,
+        IGenericRepository<MenuItem> menuItemRepository) : IOrderService
     {
         public async Task<ViewOrderDto> CreateAsync(CreateOrderDto dto)
         {
-            var order = await genericRepository.CreateAsync(dto.Adapt<Order>());
-
-            var address = new SavedAddress()
+            decimal totalPrice = 0;
+            foreach (var i in dto.Items)
             {
-                Address = dto.DeliveryInfo.Address,
-                Floor = dto.DeliveryInfo.Floor,
-                Entrance = dto.DeliveryInfo.Entrance
-            };
+                var menuItem = await menuItemRepository.GetAsync(mi => mi.Id == i.MenuItemId);
+                if (menuItem is null)
+                    throw new HttpStatusCodeException(404, "Menu item not found");
 
-            await addressRepository.CreateAsync(address);
+                totalPrice += menuItem.Price * i.Quantity;
+            }
+
+            totalPrice += dto.DeliveryInfo is null ? 0 : dto.DeliveryInfo.Fee;
+            dto.TotalAmount = totalPrice;
+
+            var newOrder = await genericRepository.CreateAsync(dto.Adapt<Order>());
+
+            if (dto.DeliveryInfo is not null)
+            {
+                var address = new SavedAddress()
+                {
+                    Address = dto.DeliveryInfo.Address,
+                    Floor = dto.DeliveryInfo.Floor,
+                    Entrance = dto.DeliveryInfo.Entrance,
+                };
+
+                var savedAddress = await addressRepository.CreateAsync(address);
+                
+                var user = await userRepository.GetAsync(u => u.TelegramUserId == long.Parse(HttpContextHelper.TelegramId));
+                user.SavedAddressId = savedAddress.Id;
+                userRepository.Update(user);
+            }
             await genericRepository.SaveChangesAsync();
-            await addressRepository.SaveChangesAsync();
-            return order.Adapt<ViewOrderDto>();
+
+            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes:["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"]);
+           
+            return newOrder.Adapt<ViewOrderDto>();
         }
 
         public async Task<ViewOrderDto> GetAsync(Guid id)
