@@ -6,7 +6,6 @@ namespace UyutMiniApp.Domain.Entities
     {
         public Guid SetItemId { get; set; }
         public SetItem SetItem { get; set; }
-
         public Guid ReplacementMenuItemId { get; set; }
         public MenuItem ReplacementMenuItem { get; set; }
     }

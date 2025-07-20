@@ -6,7 +6,24 @@ namespace UyutMiniApp.Data.Contexts
     public class UyutMiniAppDbContext : DbContext
     {
         public UyutMiniAppDbContext(DbContextOptions<UyutMiniAppDbContext> options)
-        : base(options) { }
+        : base(options) 
+        {
+            Users.IgnoreAutoIncludes();
+            Couriers.IgnoreAutoIncludes();
+            Categories.IgnoreAutoIncludes();
+            MenuItems.IgnoreAutoIncludes();
+            SetItems.IgnoreAutoIncludes();
+            SetItemReplacementOptions.IgnoreAutoIncludes();
+            Ingredients.IgnoreAutoIncludes();
+            CustomMeals.IgnoreAutoIncludes();
+            CustomMealIngredients.IgnoreAutoIncludes();
+            Orders.IgnoreAutoIncludes();
+            DeliveryInfos.IgnoreAutoIncludes();
+            OrderItems.IgnoreAutoIncludes();
+            SetReplacementSelections.IgnoreAutoIncludes();
+            IngredientRecommendations.IgnoreAutoIncludes();
+            SavedAddresses.IgnoreAutoIncludes();
+        }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Courier> Couriers { get; set; }
@@ -35,14 +52,23 @@ namespace UyutMiniApp.Data.Contexts
             // Optional: restrict deletes where needed (to prevent cascade issues)
 
             modelBuilder.Entity<SetItem>()
-                .HasOne(si => si.IncludedItem)
-                .WithMany()
+                .HasOne(si => si.MenuItem)
+                .WithMany(s => s.SetItems)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<SetItem>()
+                .HasOne(s => s.IncludedItem)
+                .WithMany();
 
             modelBuilder.Entity<SetItemReplacementOption>()
                 .HasOne(r => r.ReplacementMenuItem)
                 .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SetItemReplacementOption>().
+                HasOne(r => r.SetItem)
+                .WithMany(s => s.ReplacementOptions)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Courier)

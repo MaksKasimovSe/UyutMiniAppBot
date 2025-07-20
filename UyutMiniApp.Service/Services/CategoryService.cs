@@ -46,11 +46,19 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<List<ViewCategoryDto>> GetAllAsync()
         {
-            var categories = repository.GetAll(false, includes: ["MenuItems", "Ingredients", "MenuItems.SetItems", "MenuItems.SetItems.ReplacementOptions"]);
+            try
+            {
+                var categories = repository.GetAll(false, includes: ["MenuItems", "Ingredients", "MenuItems.SetItems", "MenuItems.SetItems.ReplacementOptions" , "MenuItems.SetItems.ReplacementOptions.ReplacementMenuItem"]);
 
-            var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
-            var role = HttpContextHelper.Role;
-            return viewCategories;
+                var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
+                var role = HttpContextHelper.Role;
+                return viewCategories;
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
         }
     }
 }
