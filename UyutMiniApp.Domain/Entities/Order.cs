@@ -23,5 +23,4 @@ namespace UyutMiniApp.Domain.Entities
         public Guid? CourierId { get; set; }
         public Courier Courier { get; set; }
     }
-
 }
