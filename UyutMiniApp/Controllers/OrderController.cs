@@ -17,7 +17,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto)
         {
             var res = await orderService.CreateAsync(createOrderDto);
-            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", HttpContextHelper.TelegramId, JsonConvert.SerializeObject(createOrderDto));
+            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", HttpContextHelper.TelegramId, res);
             return Ok(res);
         }
 
