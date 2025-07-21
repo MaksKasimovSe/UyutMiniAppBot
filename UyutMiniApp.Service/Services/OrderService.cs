@@ -30,7 +30,7 @@ namespace UyutMiniApp.Service.Services
             totalPrice += dto.DeliveryInfo is null ? 0 : dto.DeliveryInfo.Fee;
             dto.TotalAmount = totalPrice;
 
-            var newOrder = await genericRepository.CreateAsync(dto.Adapt<Order>());
+            var newOrder = dto.Adapt<Order>();
 
             var lastOrder = await genericRepository.GetAll().OrderByDescending(o => o.CreatedAt).FirstOrDefaultAsync();
             if (lastOrder is null)
@@ -39,6 +39,8 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = 1;
             else
                 newOrder.OrderNumber = lastOrder.OrderNumber++;
+
+            newOrder = await genericRepository.CreateAsync(newOrder);
 
             if (dto.DeliveryInfo is not null)
             {
