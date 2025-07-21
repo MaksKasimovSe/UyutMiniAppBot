@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.Orders;
@@ -31,6 +32,14 @@ namespace UyutMiniApp.Service.Services
 
             var newOrder = await genericRepository.CreateAsync(dto.Adapt<Order>());
 
+            var lastOrder = await genericRepository.GetAll().OrderByDescending(o => o.CreatedAt).FirstOrDefaultAsync();
+            if (lastOrder is null)
+                newOrder.OrderNumber = 1;
+            else if (lastOrder.OrderNumber == 100)
+                newOrder.OrderNumber = 1;
+            else
+                newOrder.OrderNumber = lastOrder.OrderNumber++;
+
             if (dto.DeliveryInfo is not null)
             {
                 var address = new SavedAddress()
@@ -41,7 +50,7 @@ namespace UyutMiniApp.Service.Services
                 };
 
                 var savedAddress = await addressRepository.CreateAsync(address);
-                
+
                 var user = await userRepository.GetAsync(u => u.TelegramUserId == long.Parse(HttpContextHelper.TelegramId));
                 user.SavedAddressId = savedAddress.Id;
                 userRepository.Update(user);

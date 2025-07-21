@@ -14,6 +14,8 @@ namespace UyutMiniApp.Domain.Entities
 
         public decimal TotalAmount { get; set; }
 
+        public int OrderNumber { get; set; }
+
         public OrderStatus Status { get; set; }
 
         public PaymentMethod PaymentMethod { get; set; }

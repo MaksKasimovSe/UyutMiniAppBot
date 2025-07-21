@@ -13,6 +13,7 @@ public class ViewOrderDto
     public ViewUserDto User { get; set; }
     public DateTime CreatedAt { get; set; }
     public OrderType Type { get; set; }
+    public int OrderNumber { get; set; }
     public decimal TotalAmount { get; set; }
     public OrderStatus Status { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
