@@ -38,7 +38,7 @@ namespace UyutMiniApp.Service.Services
             else if (lastOrder.OrderNumber == 100)
                 newOrder.OrderNumber = 1;
             else
-                newOrder.OrderNumber = lastOrder.OrderNumber++;
+                newOrder.OrderNumber = ++lastOrder.OrderNumber;
 
             newOrder = await genericRepository.CreateAsync(newOrder);
 
