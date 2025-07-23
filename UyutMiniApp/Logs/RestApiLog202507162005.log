@@ -1,1 +1,0 @@
-2025-07-16 20:05:00.589 +09:00 [Error] [Microsoft.EntityFrameworkCore.Database.Connection] [{ Id: 20004, Name: "Microsoft.EntityFrameworkCore.Database.Connection.ConnectionError" }] An error occurred using the connection to database '"UyutMiniApp"' on server '"tcp://localhost:5432"'.

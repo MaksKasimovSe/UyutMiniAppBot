@@ -34,8 +34,8 @@ namespace UyutMiniApp.Controllers
             return Ok(new { Status = "Message sent" });
         }
 
-        [HttpPost("receipt/{id}")]
-        public async Task<IActionResult> UploadReceipt(Guid id, [FromForm] IFormFile receiptImage)
+        [HttpPost("receipt")]
+        public async Task<IActionResult> UploadReceipt([FromQuery] Guid id, IFormFile receiptImage)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".png";
             string filePath = Path.Combine(EnvironmentHelper.AttachmentPath, fileName);
