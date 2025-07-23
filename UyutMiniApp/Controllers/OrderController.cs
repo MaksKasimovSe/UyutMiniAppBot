@@ -27,10 +27,10 @@ namespace UyutMiniApp.Controllers
             Ok(await orderService.GetAsync(id));
 
         [HttpPost("send/{userId}")]
-        public async Task<IActionResult> SendMessage([FromRoute] Guid userId, [FromQuery] Guid id, [FromQuery] OrderStatus status)
+        public async Task<IActionResult> SendMessage(SendOrderMessage message)
         {
-            await orderService.ChangeStatus(id, status);
-            await hubContext.Clients.All.SendAsync("ReceiveMessage", id.ToString(), Enum.GetName(status));
+            await orderService.ChangeStatus(message.Id, message.Status);
+            await hubContext.Clients.All.SendAsync("ReceiveMessage", message.Id.ToString(), Enum.GetName(message.Status));
             return Ok(new { Status = "Message sent" });
         }
 
@@ -54,6 +54,12 @@ namespace UyutMiniApp.Controllers
             await orderService.UpdateOrderReceipt(id, url);
 
             return Ok(url);
+        }
+
+        public class SendOrderMessage
+        {
+            public Guid Id { get; set; }
+            public OrderStatus Status { get; set; }
         }
     }
 }
