@@ -22,4 +22,8 @@
     <ProjectReference Include="..\UyutMiniApp.Service\UyutMiniApp.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\receipts\" />
+  </ItemGroup>
+
 </Project>
