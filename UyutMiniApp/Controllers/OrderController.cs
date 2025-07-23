@@ -30,7 +30,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> SendMessage([FromRoute] Guid userId, [FromForm] UpdateOrderStatusDto status)
         {
             await orderService.ChangeStatus(status.Id, status.Status);
-            await hubContext.Clients.All.SendAsync("ReceiveMessage", userId.ToString(), Enum.GetName(status.Status));
+            await hubContext.Clients.All.SendAsync("ReceiveMessage", status.Id.ToString(), Enum.GetName(status.Status));
             return Ok(new { Status = "Message sent" });
         }
 
