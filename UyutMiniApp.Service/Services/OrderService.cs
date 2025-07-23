@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
+using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Orders;
 using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Helpers;
@@ -32,6 +33,7 @@ namespace UyutMiniApp.Service.Services
 
             var newOrder = dto.Adapt<Order>();
 
+            newOrder.Status = OrderStatus.Pending;
             var lastOrder = await genericRepository.GetAll().OrderByDescending(o => o.CreatedAt).FirstOrDefaultAsync();
             if (lastOrder is null)
                 newOrder.OrderNumber = 1;
@@ -72,6 +74,28 @@ namespace UyutMiniApp.Service.Services
                 throw new HttpStatusCodeException(404, "order not found");
 
             return existOrder.Adapt<ViewOrderDto>();
+        }
+
+        public async Task<string> UpdateOrderReceipt(Guid id, string url)
+        {
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id);
+            if (existOrder is null)
+                throw new HttpStatusCodeException(404, "Order not found");
+            existOrder.OrderUrl = url;
+            genericRepository.Update(existOrder);
+            await genericRepository.SaveChangesAsync();
+            
+            return url;
+        }
+
+        public async Task ChangeStatus(Guid id, OrderStatus status)
+        {
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id);
+            if (existOrder is null)
+                throw new HttpStatusCodeException(404, "Order not found");
+            existOrder.Status = status;
+            genericRepository.Update(existOrder);
+            await genericRepository.SaveChangesAsync();
         }
     }
 }

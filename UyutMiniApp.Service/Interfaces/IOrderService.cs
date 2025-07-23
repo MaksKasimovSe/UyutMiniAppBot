@@ -1,4 +1,5 @@
-﻿using UyutMiniApp.Service.DTOs.Orders;
+﻿using UyutMiniApp.Domain.Enums;
+using UyutMiniApp.Service.DTOs.Orders;
 
 namespace UyutMiniApp.Service.Interfaces
 {
@@ -6,5 +7,7 @@ namespace UyutMiniApp.Service.Interfaces
     {
         Task<ViewOrderDto> CreateAsync(CreateOrderDto dto);
         Task<ViewOrderDto> GetAsync(Guid id);
+        Task<string> UpdateOrderReceipt(Guid id, string url);
+        Task ChangeStatus(Guid id, OrderStatus status);
     }
 }
