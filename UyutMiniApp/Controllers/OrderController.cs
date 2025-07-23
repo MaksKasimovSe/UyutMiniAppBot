@@ -38,7 +38,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> UploadReceipt([FromQuery] Guid id, IFormFile receiptImage)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".png";
-            string filePath = Path.Combine(EnvironmentHelper.AttachmentPath, fileName);
+            string filePath = Path.Combine(EnvironmentHelper.ReceiptsPath, fileName);
 
             if (!Directory.Exists(EnvironmentHelper.AttachmentPath))
                 Directory.CreateDirectory(EnvironmentHelper.AttachmentPath);
