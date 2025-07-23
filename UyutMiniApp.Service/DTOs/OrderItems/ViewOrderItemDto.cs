@@ -6,6 +6,7 @@ public class ViewOrderItemDto
     public ViewMenuForOrderDto MenuItem { get; set; }
     public Guid? CustomMealId { get; set; }
     public decimal Price { get; set; }
+    public string OrderUrl { get; set; }
     public int Quantity { get; set; } = 1;
 }
 
