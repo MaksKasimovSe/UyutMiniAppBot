@@ -26,7 +26,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> GetAsync(Guid id) =>
             Ok(await orderService.GetAsync(id));
 
-        [HttpPost("send/{userId}")]
+        [HttpPost("send")]
         public async Task<IActionResult> SendMessage(SendOrderMessage message)
         {
             await orderService.ChangeStatus(message.Id, message.Status);
