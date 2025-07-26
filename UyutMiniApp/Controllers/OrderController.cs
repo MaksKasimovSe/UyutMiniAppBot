@@ -12,7 +12,7 @@ using UyutMiniApp.Signalr;
 namespace UyutMiniApp.Controllers
 {
     [ApiController, Route("[controller]")]
-    public class OrderController(IOrderService orderService, IHubContext<ChatHub> hubContext, IHubContext<OrderCheckHub> orderCheckHub) : ControllerBase
+    public class OrderController(IOrderService orderService, IHubContext<ChatHub> hubContext, IHubContext<OrderCheckHub> orderCheckHub, IHubContext<OrderProcessHub> orderProcessHub) : ControllerBase
     {
         [HttpPost, Authorize]
         public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto)
@@ -27,7 +27,7 @@ namespace UyutMiniApp.Controllers
             Ok(await orderService.GetAsync(id));
 
         [HttpPost("send")]
-        public async Task<IActionResult> SendMessage(SendOrderMessage message)
+        public async Task<IActionResult> SendMessage(SendOrderMessageDto message)
         {
             await orderService.ChangeStatus(message.Id, message.Status);
             await hubContext.Clients.All.SendAsync("ReceiveMessage", message.Id.ToString(), Enum.GetName(message.Status));
@@ -56,10 +56,13 @@ namespace UyutMiniApp.Controllers
             return Ok(url);
         }
 
-        public class SendOrderMessage
+        [HttpPost("process")]
+        public async Task<IActionResult> ChangeOrderMessage(SendProcessMessageDto dto)
         {
-            public Guid Id { get; set; }
-            public OrderStatus Status { get; set; }
+            await orderService.ChangeProcess(dto.Id,dto.OrderProcess);
+            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", dto.Id, Enum.GetName(dto.OrderProcess));
+            return Ok(new { Status = "Message Sent" });
         }
+
     }
 }

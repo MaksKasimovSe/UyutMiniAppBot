@@ -18,6 +18,8 @@ namespace UyutMiniApp.Domain.Entities
         public string OrderUrl { get; set; }
         public OrderStatus Status { get; set; }
 
+        public OrderProcess OrderProcess { get; set; }
+
         public PaymentMethod PaymentMethod { get; set; }
 
         public ICollection<OrderItem> Items { get; set; }

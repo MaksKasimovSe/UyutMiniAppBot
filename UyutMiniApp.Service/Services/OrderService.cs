@@ -97,5 +97,16 @@ namespace UyutMiniApp.Service.Services
             genericRepository.Update(existOrder);
             await genericRepository.SaveChangesAsync();
         }
+
+        public async Task ChangeProcess(Guid id, OrderProcess orderProcess)
+        {
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id);
+            if (existOrder is null)
+                throw new HttpStatusCodeException(404, "Order not found");
+
+            existOrder.OrderProcess = orderProcess;
+            genericRepository.Update(existOrder);
+            await genericRepository.SaveChangesAsync();
+        }
     }
 }

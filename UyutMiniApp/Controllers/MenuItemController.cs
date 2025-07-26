@@ -33,6 +33,7 @@ namespace UyutMiniApp.Controllers
 
             await menuItemService.CreateAsync(dto);
         }
+
         [HttpPut("id")]
         public async Task UpdateAsync(Guid id, [FromForm] UpdateMenuItemDto dto)
         {
