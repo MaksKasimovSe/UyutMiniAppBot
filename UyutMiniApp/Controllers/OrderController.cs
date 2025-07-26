@@ -56,13 +56,17 @@ namespace UyutMiniApp.Controllers
             return Ok(url);
         }
 
-        [HttpPost("process")]
+        [HttpPost("process"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> ChangeOrderMessage(SendProcessMessageDto dto)
         {
             await orderService.ChangeProcess(dto.Id,dto.OrderProcess);
             await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", dto.Id, Enum.GetName(dto.OrderProcess));
-            return Ok(new { Status = "Message Sent" });
+            return Ok(new { Status = "Message sent" });
         }
 
+        [HttpGet("today"), Authorize(Roles = "User, Admin")]
+        public async Task<IActionResult> GetTodaysOrders() =>
+             Ok(await orderService.GetTodaysOrders());
+        
     }
 }

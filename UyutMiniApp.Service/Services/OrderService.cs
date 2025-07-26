@@ -108,5 +108,13 @@ namespace UyutMiniApp.Service.Services
             genericRepository.Update(existOrder);
             await genericRepository.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<ViewOrderDto>> GetTodaysOrders()
+        {
+            var orders = genericRepository.GetAll(false, o => o.CreatedAt.Date == DateTime.UtcNow.Date, includes: ["Items", "Items.MenuItem","User"]);
+
+            var dtoOrders = await orders.Where(o => o.User.Id == HttpContextHelper.UserId).ToListAsync();
+            return dtoOrders.Adapt<List<ViewOrderDto>>();
+        }
     }
 }

@@ -16,6 +16,7 @@ public class ViewOrderDto
     public int OrderNumber { get; set; }
     public decimal TotalAmount { get; set; }
     public OrderStatus Status { get; set; }
+    public OrderProcess OrderProcess { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
     public ICollection<ViewOrderItemDto> Items { get; set; }
     public ICollection<ViewSetReplacementSelectionDto> SetReplacements { get; set; }

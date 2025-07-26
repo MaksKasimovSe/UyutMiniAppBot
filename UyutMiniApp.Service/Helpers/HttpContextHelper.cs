@@ -7,14 +7,14 @@ namespace UyutMiniApp.Service.Helpers
         public static IHttpContextAccessor Accessor { get; set; }
         public static HttpContext HttpContext => Accessor?.HttpContext;
         public static IHeaderDictionary ResponseHeaders => HttpContext?.Response?.Headers;
-        public static int? UserId => GetUserId();
+        public static Guid? UserId => GetUserId();
         public static string TelegramId => HttpContext?.User.FindFirst("TelegramUserId")?.Value;
         public static string Role => HttpContext?.User.FindFirst("Role")?.Value;
-        private static int? GetUserId()
+        private static Guid? GetUserId()
         {
             string value = HttpContext?.User?.Claims.FirstOrDefault(p => p.Type == "Id")?.Value;
 
-            bool canParse = int.TryParse(value, out int id);
+            bool canParse = Guid.TryParse(value, out Guid id);
             return canParse ? id : null;
         }
     }

@@ -12,5 +12,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task<string> UpdateOrderReceipt(Guid id, string url);
         Task ChangeStatus(Guid id, OrderStatus status);
         Task ChangeProcess(Guid id, OrderProcess orderProcess);
+        Task<IEnumerable<ViewOrderDto>> GetTodaysOrders();
     }
 }
