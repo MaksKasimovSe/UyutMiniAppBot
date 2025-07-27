@@ -97,7 +97,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task ChangeStatus(Guid id, OrderStatus status)
         {
-            var existOrder = await genericRepository.GetAsync(o => o.Id == id, ["Items.MenuItems","User","DeliveryInfo"]);
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id, ["Items.MenuItem","User","DeliveryInfo"]);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Order not found");
             existOrder.Status = status;
