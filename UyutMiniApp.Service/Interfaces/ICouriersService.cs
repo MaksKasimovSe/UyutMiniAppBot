@@ -14,5 +14,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task EndWorkingDay();
         Task StartDelivery(Guid orderId);
         Task FinishDelivery(Guid orderId);
+        Task AcceptOrder(Guid orderId);
     }
 }

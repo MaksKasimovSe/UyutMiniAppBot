@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -142,5 +143,15 @@ namespace UyutMiniApp.Service.Services
             await orderRepository.SaveChangesAsync();
         }
 
+        public async Task AcceptOrder(Guid orderId)
+        {
+            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
+            if (existOrder is null)
+                throw new HttpStatusCodeException(404, "Delivery not found");
+
+            existOrder.CourierId = HttpContextHelper.UserId;
+            orderRepository.Update(existOrder);
+            await orderRepository.SaveChangesAsync();
+        }
     }
 }

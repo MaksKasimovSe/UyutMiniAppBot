@@ -54,5 +54,8 @@ namespace UyutMiniApp.Controllers
             await hubContext.Clients.All.SendAsync("ReceiveMessage", orderId, Enum.GetName(OrderProcess.Delivered));
         }
 
+        [HttpPatch("accept-order/{orderId}")]
+        public async Task AcceptOrder([FromRoute] Guid orderId) =>
+            await courierService.AcceptOrder(orderId);
     }
 }
