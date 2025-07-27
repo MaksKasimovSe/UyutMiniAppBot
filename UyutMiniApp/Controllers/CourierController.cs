@@ -18,7 +18,7 @@ namespace UyutMiniApp.Controllers
             await courierService.CreateAsync(dto);
 
         [HttpPost("login")]
-        public async Task LoginAsync(LoginUserDto dto) =>
+        public async Task<IActionResult> LoginAsync(LoginUserDto dto) =>
             Ok(await courierService.GenerateToken(dto.TelegramUserId));
 
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
