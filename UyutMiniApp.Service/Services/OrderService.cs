@@ -104,7 +104,7 @@ namespace UyutMiniApp.Service.Services
             if (status == OrderStatus.Paid)
             {
                 string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
-                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\nАддресс: {existOrder.DeliveryInfo}";
+                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\nАддресс: {existOrder.DeliveryInfo.Address}";
                 string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
                 var availableCouriers = courierRepository.GetAll(
                     false, c => c.IsAvailable == true && c.IsWorking == true);
@@ -124,7 +124,7 @@ namespace UyutMiniApp.Service.Services
                                 {
                                     new {
                                         text = "✅ Принять",
-                                        url = "accepted"
+                                        callback_data = "accepted"
                                     }
                                 },
                                 new[] 
