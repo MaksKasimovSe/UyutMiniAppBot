@@ -1,6 +1,9 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
@@ -14,7 +17,8 @@ namespace UyutMiniApp.Service.Services
     public class OrderService(IGenericRepository<Order> genericRepository, 
         IGenericRepository<SavedAddress> addressRepository,
         IGenericRepository<User> userRepository,
-        IGenericRepository<MenuItem> menuItemRepository) : IOrderService
+        IGenericRepository<MenuItem> menuItemRepository,
+        IGenericRepository<Courier> courierRepository) : IOrderService
     {
         public async Task<ViewOrderDto> CreateAsync(CreateOrderDto dto)
         {
@@ -29,7 +33,7 @@ namespace UyutMiniApp.Service.Services
             }
 
             totalPrice += dto.DeliveryInfo is null ? 0 : dto.DeliveryInfo.Fee;
-            dto.TotalAmount = totalPrice;
+
 
             var newOrder = dto.Adapt<Order>();
 
@@ -41,6 +45,9 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = 1;
             else
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
+
+            totalPrice -= newOrder.OrderNumber;
+            dto.TotalAmount = totalPrice;
 
             newOrder = await genericRepository.CreateAsync(newOrder);
 
@@ -90,10 +97,54 @@ namespace UyutMiniApp.Service.Services
 
         public async Task ChangeStatus(Guid id, OrderStatus status)
         {
-            var existOrder = await genericRepository.GetAsync(o => o.Id == id);
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id, ["Items.MenuItems","User","DeliveryInfo"]);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Order not found");
             existOrder.Status = status;
+            if (status == OrderStatus.Paid)
+            {
+                string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
+                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\nАддресс: {existOrder.DeliveryInfo}";
+                string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
+                var availableCouriers = courierRepository.GetAll(
+                    false, c => c.IsAvailable == true && c.IsWorking == true);
+
+
+                foreach (var c in availableCouriers) 
+                {
+                    var payload = new
+                    {
+                        chat_id = c.TelegramUserId,
+                        text = messageText,
+                        reply_markup = new
+                        {
+                            inline_keyboard = new List<object>
+                            {
+                                new[]
+                                {
+                                    new {
+                                        text = "✅ Принять",
+                                        url = "accepted"
+                                    }
+                                },
+                                new[] 
+                                {
+                                    new {
+                                        text = "❌ Отказаться",
+                                        callback_data = "rejected"
+                                    }
+                                }
+                            }
+                        }
+                    };
+
+                    using var client = new HttpClient();
+                    var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    string responseText = await response.Content.ReadAsStringAsync();
+                }
+
+            }    
             genericRepository.Update(existOrder);
             await genericRepository.SaveChangesAsync();
         }

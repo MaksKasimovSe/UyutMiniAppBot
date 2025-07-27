@@ -30,6 +30,11 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> SendMessage(SendOrderMessageDto message)
         {
             await orderService.ChangeStatus(message.Id, message.Status);
+            if (message.Status == OrderStatus.Paid)
+            {
+                var orderProcess = OrderProcess.Cooking;
+                await orderService.ChangeProcess(message.Id,orderProcess);
+            }
             await hubContext.Clients.All.SendAsync("ReceiveMessage", message.Id.ToString(), Enum.GetName(message.Status));
             return Ok(new { Status = "Message sent" });
         }
@@ -67,6 +72,5 @@ namespace UyutMiniApp.Controllers
         [HttpGet("today"), Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetTodaysOrders() =>
              Ok(await orderService.GetTodaysOrders());
-        
     }
 }

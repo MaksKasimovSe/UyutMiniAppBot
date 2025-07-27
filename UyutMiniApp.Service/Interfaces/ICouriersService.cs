@@ -10,5 +10,9 @@ namespace UyutMiniApp.Service.Interfaces
         public Task<IEnumerable<ViewCourierDto>> GetAllAsync();
         public Task<ViewCourierDto> GetByIdAsync(long telegramUserId);
         Task<string> GenerateToken(long telegramUserId, string phoneNumber);
+        Task StartWorkingDay();
+        Task EndWorkingDay();
+        Task StartDelivery(Guid orderId);
+        Task FinishDelivery(Guid orderId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -7,13 +8,15 @@ using System.Security.Claims;
 using System.Text;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
+using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Couriers;
 using UyutMiniApp.Service.Exceptions;
+using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Service.Services
 {
-    public class CourierService(IGenericRepository<Courier> genericRepository, IConfiguration configuration) : ICourierService
+    public class CourierService(IGenericRepository<Courier> genericRepository, IGenericRepository<Order> orderRepository, IConfiguration configuration) : ICourierService
     {
         public async Task CreateAsync(CreateCourierDto dto)
         {
@@ -50,7 +53,8 @@ namespace UyutMiniApp.Service.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("Id", existCourier.Id.ToString()),
-                    new Claim("TelegramUserId", existCourier.TelegramUserId.ToString())
+                    new Claim("TelegramUserId", existCourier.TelegramUserId.ToString()),
+                    new Claim(ClaimTypes.Role, "Courier")
                 }),
                 Expires = DateTime.UtcNow.AddMonths(int.Parse(configuration["JWT:lifetime"])),
                 Issuer = configuration["JWT:Issuer"],
@@ -91,5 +95,49 @@ namespace UyutMiniApp.Service.Services
             var dtoCourier = genericRepository.Update(dto.Adapt(existCourier));
             await genericRepository.SaveChangesAsync();
         }
+
+        public async Task StartWorkingDay()
+        {
+            var existCourier = await genericRepository.GetAsync(c => c.Id == HttpContextHelper.UserId);;
+            if (existCourier is null)
+                throw new HttpStatusCodeException(404, "Courier not found");
+
+            existCourier.IsWorking = true;
+            genericRepository.Update(existCourier);
+            await genericRepository.SaveChangesAsync();
+        }
+        public async Task EndWorkingDay()
+        {
+            var existCourier = await genericRepository.GetAsync(c => c.Id == HttpContextHelper.UserId); ;
+            if (existCourier is null)
+                throw new HttpStatusCodeException(404, "Courier not found");
+
+            existCourier.IsWorking = false;
+            genericRepository.Update(existCourier);
+            await genericRepository.SaveChangesAsync();
+        }
+
+        public async Task StartDelivery(Guid orderId)
+        {
+            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
+            if (existOrder is null)
+                throw new HttpStatusCodeException(404, "Delivery not found");
+
+            existOrder.OrderProcess = OrderProcess.Delivering;
+            orderRepository.Update(existOrder);
+            await orderRepository.SaveChangesAsync();
+        }
+
+        public async Task FinishDelivery(Guid orderId)
+        {
+            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
+            if (existOrder is null)
+                throw new HttpStatusCodeException(404, "Delivery not found");
+
+            existOrder.OrderProcess = OrderProcess.Delivered;
+            orderRepository.Update(existOrder);
+            await orderRepository.SaveChangesAsync();
+        }
+
     }
 }

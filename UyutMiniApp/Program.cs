@@ -62,6 +62,8 @@ builder.Services.AddAuthorization(options =>
         Enum.GetName(Role.User)));
     options.AddPolicy("Admin", policy => policy.RequireRole(
         Enum.GetName(Role.Admin)));
+    options.AddPolicy("Courier", policy => policy.RequireRole(
+        "Courier"));
 });
 
 var app = builder.Build();

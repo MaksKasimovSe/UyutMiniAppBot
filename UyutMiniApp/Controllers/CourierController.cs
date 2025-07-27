@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.Couriers;
 using UyutMiniApp.Service.DTOs.Users;
 using UyutMiniApp.Service.Interfaces;
@@ -21,7 +22,7 @@ namespace UyutMiniApp.Controllers
         public async Task UpdateAsync(Guid id, UpdateCourierDto dto) =>
             await courierService.UpdateAsync(id, dto);
 
-        [HttpGet("{telegramUserId}")]
+        [HttpGet("{telegramUserId}"), Authorize(Roles = "Courier")]
         public async Task<IActionResult> GetAsync(long telegramUserId) =>
             Ok(await courierService.GetByIdAsync(telegramUserId));
 
