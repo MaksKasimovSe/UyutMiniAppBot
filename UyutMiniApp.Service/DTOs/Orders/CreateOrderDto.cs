@@ -13,7 +13,6 @@ public class CreateOrderDto
     [JsonIgnore]
     public decimal TotalAmount { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
-    public Guid? CourierId { get; set; }
     public ICollection<CreateOrderItemDto> Items { get; set; }
     public ICollection<CreateSetReplacementSelectionDto> SetReplacements { get; set; }
     public CreateDeliveryInfoDto DeliveryInfo { get; set; }

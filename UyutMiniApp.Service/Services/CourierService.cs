@@ -148,7 +148,8 @@ namespace UyutMiniApp.Service.Services
             var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Delivery not found");
-
+            if (existOrder.CourierId is not null)
+                throw new HttpStatusCodeException(404, "Order is taken by another courier");
             existOrder.CourierId = HttpContextHelper.UserId;
             orderRepository.Update(existOrder);
             await orderRepository.SaveChangesAsync();

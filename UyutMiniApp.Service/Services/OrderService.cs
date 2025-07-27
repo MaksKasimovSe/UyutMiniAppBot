@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -145,11 +146,10 @@ namespace UyutMiniApp.Service.Services
                     };
 
                     using var client = new HttpClient();
-                    var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
                     var response = await client.PostAsync(url, content);
                     string responseText = await response.Content.ReadAsStringAsync();
                 }
-
             }    
         }
 
