@@ -33,11 +33,10 @@ namespace UyutMiniApp.Service.Services
             await genericRepository.SaveChangesAsync();
         }
 
-        public async Task<string> GenerateToken(long telegramUserId, string phoneNumber)
+        public async Task<string> GenerateToken(long telegramUserId)
         {
             var existUser =
-                await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId
-                || u.PhoneNumber == phoneNumber);
+                await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId);
             if (existUser is null)
                 throw new HttpStatusCodeException(404, "User not found");
 

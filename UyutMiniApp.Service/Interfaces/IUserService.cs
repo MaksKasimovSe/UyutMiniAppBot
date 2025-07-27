@@ -7,6 +7,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task AddAsync(CreateUserDto dto);
         Task DeleteAsync(Guid id);
         Task<ViewUserDto> GetAsync(long telegramUserId);
-        Task<string> GenerateToken(long telegramUserId, string phoneNumber);
+        Task<string> GenerateToken(long telegramUserId);
     }
 }

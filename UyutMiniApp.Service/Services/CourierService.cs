@@ -36,11 +36,10 @@ namespace UyutMiniApp.Service.Services
 
             await genericRepository.SaveChangesAsync();
         }
-        public async Task<string> GenerateToken(long telegramUserId, string phoneNumber)
+        public async Task<string> GenerateToken(long telegramUserId)
         {
             var existCourier =
-                await genericRepository.GetAsync(c => c.TelegramUserId == telegramUserId
-                || c.PhoneNumber == phoneNumber);
+                await genericRepository.GetAsync(c => c.TelegramUserId == telegramUserId);
             if (existCourier is not null)
                 throw new HttpStatusCodeException(400, "User already exist");
 

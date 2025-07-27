@@ -18,7 +18,7 @@ namespace UyutMiniApp.Controllers
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginUserDto dto) =>
-            Ok(await userService.GenerateToken(dto.TelegramUserId, dto.PhoneNumber));
+            Ok(await userService.GenerateToken(dto.TelegramUserId));
 
         [HttpGet("{telegramUserId}")]
         public async Task<IActionResult> GetAsync(long telegramUserId)
