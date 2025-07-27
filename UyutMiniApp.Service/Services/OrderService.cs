@@ -103,11 +103,14 @@ namespace UyutMiniApp.Service.Services
             existOrder.Status = status;
             if (status == OrderStatus.Paid)
             {
+                var availableCouriers = courierRepository.GetAll(
+                    false, c => c.IsAvailable == true && c.IsWorking == true);
+                if (availableCouriers.Count() == 0)
+                    throw new HttpStatusCodeException(400, "No active couriers");
+
                 string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
                 string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n";
                 string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
-                var availableCouriers = courierRepository.GetAll(
-                    false, c => c.IsAvailable == true && c.IsWorking == true);
                 foreach(var meals in existOrder.Items)
                 {
                     messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
@@ -127,14 +130,14 @@ namespace UyutMiniApp.Service.Services
                                 {
                                     new {
                                         text = "✅ Принять",
-                                        callback_data = "accepted"
+                                        callback_data = $"accepted:{existOrder.Id}"
                                     }
                                 },
                                 new[] 
                                 {
                                     new {
                                         text = "❌ Отказаться",
-                                        callback_data = "rejected"
+                                        callback_data = $"rejected:{existOrder.Id}"
                                     }
                                 }
                             }
@@ -148,8 +151,6 @@ namespace UyutMiniApp.Service.Services
                 }
 
             }    
-            genericRepository.Update(existOrder);
-            await genericRepository.SaveChangesAsync();
         }
 
         public async Task ChangeProcess(Guid id, OrderProcess orderProcess)

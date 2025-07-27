@@ -40,8 +40,8 @@ namespace UyutMiniApp.Service.Services
         {
             var existCourier =
                 await genericRepository.GetAsync(c => c.TelegramUserId == telegramUserId);
-            if (existCourier is not null)
-                throw new HttpStatusCodeException(400, "User already exist");
+            if (existCourier is null)
+                throw new HttpStatusCodeException(404, "Courier not found");
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
@@ -121,6 +121,10 @@ namespace UyutMiniApp.Service.Services
             var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Delivery not found");
+            if (existOrder.OrderProcess == OrderProcess.Delivering ||
+                existOrder.OrderProcess == OrderProcess.Delivered ||
+                existOrder.Status == OrderStatus.Failed)
+                throw new HttpStatusCodeException(404, "Order is unavailable now");
 
             existOrder.OrderProcess = OrderProcess.Delivering;
             orderRepository.Update(existOrder);
