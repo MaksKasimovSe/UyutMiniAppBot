@@ -137,6 +137,14 @@ namespace UyutMiniApp.Service.Services
             var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Delivery not found");
+            var existCourier = await genericRepository.GetAsync(o => o.Id == HttpContextHelper.UserId);
+            if (existCourier is null)
+                throw new HttpStatusCodeException(404, "Courier not found");
+
+            existCourier.IsAvailable = true;
+
+            genericRepository.Update(existCourier);
+            await genericRepository.SaveChangesAsync();
 
             existOrder.OrderProcess = OrderProcess.Delivered;
             orderRepository.Update(existOrder);
@@ -150,7 +158,19 @@ namespace UyutMiniApp.Service.Services
                 throw new HttpStatusCodeException(404, "Delivery not found");
             if (existOrder.CourierId is not null)
                 throw new HttpStatusCodeException(404, "Order is taken by another courier");
+
+            var existCourier = await genericRepository.GetAsync(o => o.Id == HttpContextHelper.UserId);
+            if (existCourier is null)
+                throw new HttpStatusCodeException(404,"Courier not found");
+
+            existCourier.IsAvailable = false;
+
+            genericRepository.Update(existCourier);
+            await genericRepository.SaveChangesAsync();
+            
             existOrder.CourierId = HttpContextHelper.UserId;
+            
+
             orderRepository.Update(existOrder);
             await orderRepository.SaveChangesAsync();
         }

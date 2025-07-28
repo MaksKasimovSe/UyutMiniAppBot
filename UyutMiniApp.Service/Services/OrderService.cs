@@ -110,7 +110,7 @@ namespace UyutMiniApp.Service.Services
                     throw new HttpStatusCodeException(400, "No active couriers");
 
                 string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
-                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n";
+                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n\nКоментарий:";
                 string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
                 foreach(var meals in existOrder.Items)
                 {
