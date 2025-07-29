@@ -24,6 +24,10 @@ namespace UyutMiniApp.Controllers
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task UpdateAsync(Guid id, UpdateCourierDto dto) =>
             await courierService.UpdateAsync(id, dto);
+        
+        [HttpDelete("{id}")]
+        public async Task DeleteAsync(Guid id) =>
+            await courierService.DeleteAsync(id);
 
         [HttpGet("{telegramUserId}"), Authorize(Roles = "Courier, Admin")]
         public async Task<IActionResult> GetAsync(long telegramUserId) =>

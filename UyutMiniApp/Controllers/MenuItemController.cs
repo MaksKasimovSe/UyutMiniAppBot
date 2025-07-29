@@ -34,7 +34,7 @@ namespace UyutMiniApp.Controllers
             await menuItemService.CreateAsync(dto);
         }
 
-        [HttpPut("id")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task UpdateAsync(Guid id, [FromForm] UpdateMenuItemDto dto)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".png";
@@ -53,5 +53,8 @@ namespace UyutMiniApp.Controllers
 
             await menuItemService.UpdateAsync(id, dto);
         }
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        public async Task DeleteAsync(Guid id) =>
+            await menuItemService.DeleteAsync(id);
     }
 }

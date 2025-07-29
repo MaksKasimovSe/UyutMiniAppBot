@@ -5,7 +5,7 @@ namespace UyutMiniApp.Service.Interfaces
     public interface ICourierService
     {
         public Task CreateAsync(CreateCourierDto dto);
-        public Task DeleteCourierAsync(Guid id);
+        public Task DeleteAsync(Guid id);
         public Task UpdateAsync(Guid id, UpdateCourierDto dto);
         public Task<IEnumerable<ViewCourierDto>> GetAllAsync();
         public Task<ViewCourierDto> GetByIdAsync(long telegramUserId);

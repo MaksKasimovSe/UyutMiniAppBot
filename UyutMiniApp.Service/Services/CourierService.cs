@@ -29,7 +29,7 @@ namespace UyutMiniApp.Service.Services
             await genericRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteCourierAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             var res = await genericRepository.DeleteAsync(c => c.Id == id);
             if (!res)

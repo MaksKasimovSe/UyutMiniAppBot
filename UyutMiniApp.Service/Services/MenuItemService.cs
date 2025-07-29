@@ -4,6 +4,7 @@ using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.MenuItems;
 using UyutMiniApp.Service.Exceptions;
+using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Service.Services
@@ -19,9 +20,11 @@ namespace UyutMiniApp.Service.Services
 
         public async Task DeleteAsync(Guid id)
         {
+            var existMenuItem = await genericRepository.GetAsync(c => c.Id == id);
             var isDeleted = await genericRepository.DeleteAsync(c => c.Id == id);
             if (!isDeleted)
                 throw new HttpStatusCodeException(404, "Category not found");
+            FileHelper.Remove(existMenuItem.ImageUrl);
 
             await genericRepository.SaveChangesAsync();
         }
