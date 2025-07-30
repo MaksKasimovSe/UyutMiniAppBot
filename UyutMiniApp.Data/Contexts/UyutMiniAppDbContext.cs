@@ -65,10 +65,18 @@ namespace UyutMiniApp.Data.Contexts
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SetItemReplacementOption>().
-                HasOne(r => r.SetItem)
+            modelBuilder.Entity<SetItemReplacementOption>()
+                .HasOne(r => r.SetItem)
                 .WithMany(s => s.ReplacementOptions)
+                .HasForeignKey(r => r.SetItemId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SetItem>()
+                .HasOne(s => s.IncludedItem)
+                .WithMany()
+                .HasForeignKey(s => s.IncludedItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Courier)

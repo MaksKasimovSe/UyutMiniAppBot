@@ -46,7 +46,15 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<List<ViewCategoryDto>> GetAllAsync()
         {
-            var categories = repository.GetAll(false, includes: ["MenuItems", "Ingredients", "MenuItems.SetItems", "MenuItems.SetItems.IncludedItem", "MenuItems.SetItems.ReplacementOptions", "MenuItems.SetItems.ReplacementOptions.ReplacementMenuItem"]);
+            var categories = repository.GetAll(false)
+                                        .Include(c => c.MenuItems)
+                                            .ThenInclude(mi => mi.SetItems)
+                                                .ThenInclude(si => si.ReplacementOptions)
+                                                    .ThenInclude(ro => ro.ReplacementMenuItem)
+                                        .Include(c => c.MenuItems)
+                                            .ThenInclude(mi => mi.SetItems)
+                                                .ThenInclude(si => si.IncludedItem)
+                                        .Include(c => c.Ingredients); ;
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
             var role = HttpContextHelper.Role;
