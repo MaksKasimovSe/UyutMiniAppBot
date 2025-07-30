@@ -48,7 +48,7 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
 
             totalPrice = totalPrice - newOrder.OrderNumber;
-            dto.TotalAmount = totalPrice;
+            newOrder.TotalAmount = totalPrice;
 
             newOrder = await genericRepository.CreateAsync(newOrder);
 
