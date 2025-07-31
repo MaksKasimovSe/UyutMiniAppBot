@@ -67,10 +67,16 @@ namespace UyutMiniApp.Service.Services
         }
         public async Task<IEnumerable<ViewCourierDto>> GetAllAsync()
         {
-            var couriers = genericRepository.GetAll(false);
+            IQueryable<Courier> couriers = genericRepository.GetAll(false);
+
 
             var dtoCouriers = (await couriers.ToListAsync()).Adapt<List<ViewCourierDto>>();
-
+            foreach (var dto in dtoCouriers)
+            {
+                orderRepository.GetAll(false, o => o.CourierId == dto.Id);
+                dto.NumberOfOrders = dtoCouriers.Count();
+            }
+            
             return dtoCouriers;
         }
 

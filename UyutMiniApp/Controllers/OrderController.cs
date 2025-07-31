@@ -36,6 +36,7 @@ namespace UyutMiniApp.Controllers
                 await orderService.ChangeProcess(message.Id,orderProcess);
             }
             await hubContext.Clients.All.SendAsync("ReceiveMessage", message.Id.ToString(), Enum.GetName(message.Status));
+            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", message.Id.ToString(), Enum.GetName(OrderProcess.Cooking));
             return Ok(new { Status = "Message sent" });
         }
 

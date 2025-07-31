@@ -41,7 +41,6 @@ namespace UyutMiniApp.Data.Contexts
         public DbSet<IngredientRecommendation> IngredientRecommendations { get; set; }
         public DbSet<SavedAddress> SavedAddresses { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Unique Telegram ID
@@ -77,11 +76,6 @@ namespace UyutMiniApp.Data.Contexts
                 .HasForeignKey(s => s.IncludedItemId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Courier)
-                .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<OrderItem>()
                 .HasOne(i => i.MenuItem)

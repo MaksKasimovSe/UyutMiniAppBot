@@ -37,28 +37,28 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> GetAllAsync() =>
             Ok(await courierService.GetAllAsync());
 
-        [HttpPatch("start-day")]
+        [HttpPatch("start-day"), Authorize(Roles = "Courier")]
         public async Task StartWorkingDay() =>
             await courierService.StartWorkingDay();
 
-        [HttpPatch("end-day")]
+        [HttpPatch("end-day"), Authorize(Roles = "Courier")]
         public async Task EndWorkingDay() =>
             await courierService.EndWorkingDay();
 
-        [HttpPatch("start-delivery/{orderId}")]
+        [HttpPatch("start-delivery/{orderId}"), Authorize(Roles = "Courier")]
         public async Task StartDelivery([FromRoute] Guid orderId)
         {
             await courierService.StartDelivery(orderId);
             await hubContext.Clients.All.SendAsync("ReceiveMessage", orderId, Enum.GetName(OrderProcess.Delivering));
         }
-        [HttpPatch("finish-delivery/{orderId}")]
+        [HttpPatch("finish-delivery/{orderId}"), Authorize(Roles = "Courier")]
         public async Task EndDelivery([FromRoute] Guid orderId)
         {
             await courierService.FinishDelivery(orderId);
             await hubContext.Clients.All.SendAsync("ReceiveMessage", orderId, Enum.GetName(OrderProcess.Delivered));
         }
 
-        [HttpPatch("accept-order/{orderId}")]
+        [HttpPatch("accept-order/{orderId}"), Authorize(Roles = "Courier")]
         public async Task AcceptOrder([FromRoute] Guid orderId) =>
             await courierService.AcceptOrder(orderId);
     }

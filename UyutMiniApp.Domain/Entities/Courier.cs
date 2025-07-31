@@ -1,4 +1,5 @@
 ﻿using UyutMiniApp.Domain.Commons;
+using UyutMiniApp.Domain.Enums;
 
 namespace UyutMiniApp.Domain.Entities
 {
@@ -10,6 +11,6 @@ namespace UyutMiniApp.Domain.Entities
         public long TelegramUserId { get; set; }
         public bool IsWorking { get; set; } = false;
         public bool IsAvailable { get; set; } = true;
+        public ICollection<Order> Orders { get; set; }
     }
-
 }
