@@ -8,5 +8,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task EditAsync(Guid id, UpdateCategoryDto dto);
         Task DeleteAsync(Guid id);
         Task<List<ViewCategoryDto>> GetAllAsync();
+        Task<List<ViewCategoryDto>> GetAllStockAsync();
     }
 }

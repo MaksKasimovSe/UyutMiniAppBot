@@ -15,6 +15,10 @@ namespace UyutMiniApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCategories() =>
             Ok(await categoryService.GetAllAsync());
+        
+        [HttpGet("stock")]
+        public async Task<IActionResult> GetAllStockCategories() =>
+            Ok(await categoryService.GetAllStockAsync());
 
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task DeleteAsync(Guid id) =>

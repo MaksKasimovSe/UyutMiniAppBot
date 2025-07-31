@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using NpgsqlTypes;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.Category;
@@ -57,7 +58,16 @@ namespace UyutMiniApp.Service.Services
                                         .Include(c => c.Ingredients); ;
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
-            var role = HttpContextHelper.Role;
+            
+            return viewCategories;
+        }
+
+        public async Task<List<ViewCategoryDto>> GetAllStockAsync()
+        {
+            var categories = repository.GetAll(false);
+
+            var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
+            
             return viewCategories;
         }
     }
