@@ -40,9 +40,7 @@ namespace UyutMiniApp.Service.Services
             {
                 if (dto.DeliveryInfo is null)
                     throw new HttpStatusCodeException(400,"Adress should be given");
-                if (!(dto.DeliveryInfo.Address.Contains("경기") ||
-                    dto.DeliveryInfo.Address.Contains("평택시") ||
-                    dto.DeliveryInfo.Address.Contains("포승읍")))
+                if (!dto.DeliveryInfo.Address.Contains("포승읍"))
                 {
                     throw new HttpStatusCodeException(400, "We don't deliver to that address");
                 }
