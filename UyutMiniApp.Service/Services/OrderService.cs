@@ -36,6 +36,17 @@ namespace UyutMiniApp.Service.Services
             totalPrice += dto.DeliveryInfo is null ? 0 : dto.DeliveryInfo.Fee;
 
 
+            if (dto.Type == OrderType.Delivery) 
+            {
+                if (dto.DeliveryInfo is null)
+                    throw new HttpStatusCodeException(400,"Adress should be given");
+                if (!dto.DeliveryInfo.Address.Contains("경기") ||
+                    !dto.DeliveryInfo.Address.Contains("평택시") ||
+                    !dto.DeliveryInfo.Address.Contains("포승읍"))
+                    throw new HttpStatusCodeException(400,"We don't deliver to that address");
+            }
+
+
             var newOrder = dto.Adapt<Order>();
 
             newOrder.Status = OrderStatus.Pending;
@@ -48,6 +59,8 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
 
             totalPrice = totalPrice - newOrder.OrderNumber;
+            totalPrice = totalPrice / 100 * 10;
+
             newOrder.TotalAmount = totalPrice;
 
             newOrder = await genericRepository.CreateAsync(newOrder);
