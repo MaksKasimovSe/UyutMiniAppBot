@@ -40,7 +40,7 @@ namespace UyutMiniApp.Service.Services
             {
                 if (dto.DeliveryInfo is null)
                     throw new HttpStatusCodeException(400,"Adress should be given");
-                if (!dto.DeliveryInfo.Address.Contains("포승읍"))
+                if (!dto.DeliveryInfo.Address.Contains("경기도 평택시 포승읍"))
                 {
                     throw new HttpStatusCodeException(400, "We don't deliver to that address");
                 }
@@ -126,13 +126,13 @@ namespace UyutMiniApp.Service.Services
                     throw new HttpStatusCodeException(400, "No active couriers");
                 
                 string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
-                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n\nКоментарий:";
+                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n";
                 string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
                 foreach(var meals in existOrder.Items)
                 {
                     messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
                 }
-
+                messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}";
                 foreach (var c in availableCouriers) 
                 {
                     var payload = new
