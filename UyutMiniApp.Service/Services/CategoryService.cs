@@ -27,7 +27,7 @@ namespace UyutMiniApp.Service.Services
         {
             var existCategory = await repository.GetAsync(c => c.Id == id);
 
-            if (existCategory is not null)
+            if (existCategory is null)
                 throw new HttpStatusCodeException(404, "Category does not exist");
 
             await repository.DeleteAsync(c => c.Id == id);
@@ -38,7 +38,7 @@ namespace UyutMiniApp.Service.Services
         {
             var existCategory = await repository.GetAsync(c => c.Id == id);
 
-            if (existCategory is not null)
+            if (existCategory is null)
                 throw new HttpStatusCodeException(404, "Category does not exist");
 
             repository.Update(dto.Adapt(existCategory));
