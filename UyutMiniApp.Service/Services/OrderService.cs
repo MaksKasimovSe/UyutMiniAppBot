@@ -61,7 +61,7 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
 
             totalPrice = totalPrice - newOrder.OrderNumber;
-            totalPrice = totalPrice / 100 * 10;
+            totalPrice -= (totalPrice / 100 * 10);
 
             newOrder.TotalAmount = totalPrice;
 
