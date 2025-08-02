@@ -100,6 +100,7 @@ app.MapHub<OrderProcessHub>("/orderprocesshub").RequireAuthorization();
 
 
 app.UseCors("AllowAll");
+app.UseCors("AllowSpecific");
 
 app.UseWebSockets();
 
