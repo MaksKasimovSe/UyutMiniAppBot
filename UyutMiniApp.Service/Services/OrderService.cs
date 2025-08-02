@@ -120,28 +120,30 @@ namespace UyutMiniApp.Service.Services
             await genericRepository.SaveChangesAsync();
             if (status == OrderStatus.Paid)
             {
-                var availableCouriers = courierRepository.GetAll(
-                    false, c => c.IsAvailable == true && c.IsWorking == true);
-                if (availableCouriers.Count() == 0)
-                    throw new HttpStatusCodeException(400, "No active couriers");
-                
-                string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
-                string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n";
-                string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
-                foreach(var meals in existOrder.Items)
+                if (existOrder.Type == OrderType.Delivery)
                 {
-                    messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
-                }
-                messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}";
-                foreach (var c in availableCouriers) 
-                {
-                    var payload = new
+                    var availableCouriers = courierRepository.GetAll(
+                        false, c => c.IsAvailable == true && c.IsWorking == true);
+                    if (availableCouriers.Count() == 0)
+                        throw new HttpStatusCodeException(400, "No active couriers");
+
+                    string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
+                    string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n";
+                    string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
+                    foreach (var meals in existOrder.Items)
                     {
-                        chat_id = c.TelegramUserId,
-                        text = messageText,
-                        reply_markup = new
+                        messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
+                    }
+                    messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}";
+                    foreach (var c in availableCouriers)
+                    {
+                        var payload = new
                         {
-                            inline_keyboard = new List<object>
+                            chat_id = c.TelegramUserId,
+                            text = messageText,
+                            reply_markup = new
+                            {
+                                inline_keyboard = new List<object>
                             {
                                 new[]
                                 {
@@ -150,7 +152,7 @@ namespace UyutMiniApp.Service.Services
                                         callback_data = $"accepted:{existOrder.Id}"
                                     }
                                 },
-                                new[] 
+                                new[]
                                 {
                                     new {
                                         text = "❌ Отказаться",
@@ -158,15 +160,16 @@ namespace UyutMiniApp.Service.Services
                                     }
                                 }
                             }
-                        }
-                    };
+                            }
+                        };
 
-                    using var client = new HttpClient();
-                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(url, content);
-                    string responseText = await response.Content.ReadAsStringAsync();
+                        using var client = new HttpClient();
+                        var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                        var response = await client.PostAsync(url, content);
+                        string responseText = await response.Content.ReadAsStringAsync();
+                    }
                 }
-            }    
+            }
         }
 
         public async Task ChangeProcess(Guid id, OrderProcess orderProcess)
