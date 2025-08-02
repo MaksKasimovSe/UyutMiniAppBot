@@ -53,7 +53,7 @@ namespace UyutMiniApp.Data.Contexts
             modelBuilder.Entity<SetItem>()
                 .HasOne(si => si.MenuItem)
                 .WithMany(s => s.SetItems)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             
             modelBuilder.Entity<SetItem>()
                 .HasOne(s => s.IncludedItem)

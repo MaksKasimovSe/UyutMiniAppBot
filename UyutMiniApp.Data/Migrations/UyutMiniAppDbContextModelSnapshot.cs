@@ -290,9 +290,6 @@ namespace UyutMiniApp.Data.Migrations
                     b.Property<Guid?>("CourierId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CourierId1")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -323,18 +320,11 @@ namespace UyutMiniApp.Data.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("UserId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CourierId");
 
-                    b.HasIndex("CourierId1");
-
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Orders");
                 });
@@ -596,23 +586,14 @@ namespace UyutMiniApp.Data.Migrations
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Order", b =>
                 {
                     b.HasOne("UyutMiniApp.Domain.Entities.Courier", "Courier")
-                        .WithMany()
-                        .HasForeignKey("CourierId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("UyutMiniApp.Domain.Entities.Courier", null)
                         .WithMany("Orders")
-                        .HasForeignKey("CourierId1");
+                        .HasForeignKey("CourierId");
 
                     b.HasOne("UyutMiniApp.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("UyutMiniApp.Domain.Entities.User", null)
                         .WithMany("Orders")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Courier");
 
@@ -655,7 +636,7 @@ namespace UyutMiniApp.Data.Migrations
                     b.HasOne("UyutMiniApp.Domain.Entities.MenuItem", "MenuItem")
                         .WithMany("SetItems")
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("IncludedItem");

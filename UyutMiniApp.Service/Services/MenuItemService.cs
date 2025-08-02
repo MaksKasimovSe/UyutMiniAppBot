@@ -45,7 +45,7 @@ namespace UyutMiniApp.Service.Services
                 throw new HttpStatusCodeException(404, "Menu item not found");
 
             var alreadyExistMenuItem = await genericRepository.GetAsync(mi => mi.Name == dto.Name);
-            if (alreadyExistMenuItem is null)
+            if (alreadyExistMenuItem is not null)
                 throw new HttpStatusCodeException(404, "Menu item with given name already exist");
 
             var menuItems = genericRepository.Update(dto.Adapt(existMenuItem));

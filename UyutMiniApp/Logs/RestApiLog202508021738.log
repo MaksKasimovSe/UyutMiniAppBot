@@ -1,0 +1,2 @@
+2025-08-02 17:38:50.208 +09:00 [Error] [Microsoft.EntityFrameworkCore.Database.Command] [{ Id: 20102, Name: "Microsoft.EntityFrameworkCore.Database.Command.CommandError" }] Failed executing DbCommand ("152"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""ALTER TABLE \"Orders\" DROP CONSTRAINT \"FK_Orders_Couriers_CourierId1\";"
