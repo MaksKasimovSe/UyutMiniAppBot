@@ -18,7 +18,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto)
         {
             var res = await orderService.CreateAsync(createOrderDto);
-            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", HttpContextHelper.TelegramId, JsonConvert.SerializeObject(res));
+            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{res.Id}:{HttpContextHelper.UserId}", JsonConvert.SerializeObject(res));
             return Ok(res);
         }
 
@@ -35,7 +35,7 @@ namespace UyutMiniApp.Controllers
                 var orderProcess = OrderProcess.Cooking;
                 await orderService.ChangeProcess(message.Id,orderProcess);
             }
-            await hubContext.Clients.All.SendAsync("ReceiveMessage", message.Id.ToString(), Enum.GetName(message.Status));
+            await hubContext.Clients.All.SendAsync("ReceiveMessage", $"{message.Id.ToString()}:{HttpContextHelper.UserId}", Enum.GetName(message.Status));
             await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", message.Id.ToString(), Enum.GetName(OrderProcess.Cooking));
             return Ok(new { Status = "Message sent" });
         }
@@ -66,7 +66,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> ChangeOrderMessage(SendProcessMessageDto dto)
         {
             await orderService.ChangeProcess(dto.Id,dto.OrderProcess);
-            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", dto.Id, Enum.GetName(dto.OrderProcess));
+            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", $"{dto.Id}:{HttpContextHelper.UserId}", Enum.GetName(dto.OrderProcess));
             return Ok(new { Status = "Message sent" });
         }
 
