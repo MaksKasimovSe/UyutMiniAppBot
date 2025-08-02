@@ -44,7 +44,7 @@ namespace UyutMiniApp.Service.Services
             if (existMenuItem is null)
                 throw new HttpStatusCodeException(404, "Menu item not found");
 
-            var alreadyExistMenuItem = await genericRepository.GetAsync(mi => mi.Name == dto.Name);
+            var alreadyExistMenuItem = await genericRepository.GetAsync(mi => mi.Name == dto.Name && mi.Id != id);
             if (alreadyExistMenuItem is not null)
                 throw new HttpStatusCodeException(404, "Menu item with given name already exist");
 
