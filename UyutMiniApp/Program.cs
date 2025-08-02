@@ -54,6 +54,14 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });
+    options.AddPolicy("AllowSpecific",
+        builder =>
+        {
+            builder.WithOrigins("https://uyut.kr", "https://www.uyut.kr")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials();
+        });
 });
 
 builder.Services.AddAuthorization(options =>
