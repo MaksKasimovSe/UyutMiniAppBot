@@ -57,7 +57,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecific",
         builder =>
         {
-            builder.WithOrigins("https://uyut.kr", "https://www.uyut.kr")
+            builder.WithOrigins("https://uyut.kr")
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials();
@@ -89,6 +89,8 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+app.UseCors("AllowSpecific");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -98,9 +100,6 @@ app.MapHub<ChatHub>("/chathub").RequireAuthorization();
 app.MapHub<OrderCheckHub>("/orderchekhub").RequireAuthorization();
 app.MapHub<OrderProcessHub>("/orderprocesshub").RequireAuthorization();
 
-
-app.UseCors("AllowAll");
-app.UseCors("AllowSpecific");
 
 app.UseWebSockets();
 
