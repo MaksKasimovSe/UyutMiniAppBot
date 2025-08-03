@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
+using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Orders;
 using UyutMiniApp.Service.Helpers;
@@ -35,8 +36,9 @@ namespace UyutMiniApp.Controllers
                 var orderProcess = OrderProcess.Cooking;
                 await orderService.ChangeProcess(message.Id,orderProcess);
             }
-            await hubContext.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{message.Id.ToString()}:{HttpContextHelper.UserId}", Enum.GetName(message.Status));
-            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{message.Id.ToString()}:{HttpContextHelper.UserId}", Enum.GetName(OrderProcess.Cooking));
+            var order = await orderService.GetAsync(message.Id);
+            await hubContext.Clients.All.SendAsync("ReceiveMessage", $"{order.User.TelegramUserId}:{message.Id.ToString()}:{order.User.Id}", Enum.GetName(message.Status));
+            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", $"{order.User.TelegramUserId}:{message.Id.ToString()}:{order.User.Id}", Enum.GetName(OrderProcess.Cooking));
             return Ok(new { Status = "Message sent" });
         }
 
@@ -66,7 +68,9 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> ChangeOrderMessage(SendProcessMessageDto dto)
         {
             await orderService.ChangeProcess(dto.Id,dto.OrderProcess);
-            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{dto.Id}:{HttpContextHelper.UserId}", Enum.GetName(dto.OrderProcess));
+
+            var order = await orderService.GetAsync(dto.Id);
+            await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", $"{order.User.TelegramUserId}:{dto.Id}:{order.User.Id}", Enum.GetName(dto.OrderProcess));
             return Ok(new { Status = "Message sent" });
         }
 
