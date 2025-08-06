@@ -189,31 +189,32 @@ namespace UyutMiniApp.Service.Services
                 throw new HttpStatusCodeException(404, "Order not found");
 
             if (existOrder.CourierId is not null && existOrder.CourierId == HttpContextHelper.UserId)
+            {
                 existOrder.CourierId = null;
 
-            var availableCouriers = genericRepository.GetAll(
-                                    false, c => c.IsAvailable == true && c.IsWorking == true);
-            if (availableCouriers.Count() == 0)
-                throw new HttpStatusCodeException(400, "No active couriers");
+                var availableCouriers = genericRepository.GetAll(
+                                        false, c => c.IsAvailable == true && c.IsWorking == true);
+                if (availableCouriers.Count() == 0)
+                    throw new HttpStatusCodeException(400, "No active couriers");
 
-            string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
-            string messageText =
-                $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\nНомер телефона: {existOrder.User.PhoneNumber}\n\nПозиции:\n";
-            string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
-            foreach (var meals in existOrder.Items)
-            {
-                messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
-            }
-            messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}";
-            foreach (var c in availableCouriers)
-            {
-                var payload = new
+                string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
+                string messageText =
+                    $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\nНомер телефона: {existOrder.User.PhoneNumber}\n\nПозиции:\n";
+                string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
+                foreach (var meals in existOrder.Items)
                 {
-                    chat_id = c.TelegramUserId,
-                    text = messageText,
-                    reply_markup = new
+                    messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
+                }
+                messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}";
+                foreach (var c in availableCouriers)
+                {
+                    var payload = new
                     {
-                        inline_keyboard = new List<object>
+                        chat_id = c.TelegramUserId,
+                        text = messageText,
+                        reply_markup = new
+                        {
+                            inline_keyboard = new List<object>
                             {
                                 new[]
                                 {
@@ -230,13 +231,14 @@ namespace UyutMiniApp.Service.Services
                                     }
                                 }
                             }
-                    }
-                };
+                        }
+                    };
 
-                using var client = new HttpClient();
-                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(url, content);
-                string responseText = await response.Content.ReadAsStringAsync();
+                    using var client = new HttpClient();
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    string responseText = await response.Content.ReadAsStringAsync();
+                }
             }
             orderRepository.Update(existOrder);
             await orderRepository.SaveChangesAsync();
