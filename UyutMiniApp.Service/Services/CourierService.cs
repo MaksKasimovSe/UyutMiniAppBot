@@ -187,7 +187,7 @@ namespace UyutMiniApp.Service.Services
             var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Order not found");
-
+            
             if (existOrder.CourierId is not null && existOrder.CourierId == HttpContextHelper.UserId)
             {
                 existOrder.CourierId = null;
@@ -238,6 +238,13 @@ namespace UyutMiniApp.Service.Services
                     var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
                     var response = await client.PostAsync(url, content);
                     string responseText = await response.Content.ReadAsStringAsync();
+                    var existCourier = await genericRepository.GetAsync(c => c.Id == HttpContextHelper.UserId);
+                    if (existCourier is not null)
+                    {
+                        existCourier.IsAvailable = true;
+                        genericRepository.Update(existCourier);
+                        await genericRepository.SaveChangesAsync();
+                    }
                 }
             }
             orderRepository.Update(existOrder);
