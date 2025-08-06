@@ -15,5 +15,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task StartDelivery(Guid orderId);
         Task FinishDelivery(Guid orderId);
         Task AcceptOrder(Guid orderId);
+        Task RejectOrder(Guid orderId);
     }
 }

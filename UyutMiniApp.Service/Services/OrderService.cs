@@ -192,5 +192,14 @@ namespace UyutMiniApp.Service.Services
             
             return dtoOrders.Adapt<List<ViewOrderDto>>();
         }
+
+        public async Task<IEnumerable<ViewOrderDto>> GetPendingOrders()
+        {
+            var orders = genericRepository.GetAll(false, o => o.CourierId == null, includes: ["Items", "Items.MenuItem", "User", "DeliveryInfo"]);
+
+            var dtoOrders = await orders.ToListAsync();
+
+            return dtoOrders.Adapt<List<ViewOrderDto>>();
+        }
     }
 }

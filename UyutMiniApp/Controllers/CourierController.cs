@@ -61,5 +61,9 @@ namespace UyutMiniApp.Controllers
         [HttpPatch("accept-order/{orderId}"), Authorize(Roles = "Courier")]
         public async Task AcceptOrder([FromRoute] Guid orderId) =>
             await courierService.AcceptOrder(orderId);
+        
+        [HttpPatch("reject-order/{orderId}"), Authorize(Roles = "Courier")]
+        public async Task RejectOrder([FromRoute] Guid orderId) =>
+            await courierService.RejectOrder(orderId);
     }
 }

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -161,7 +163,7 @@ namespace UyutMiniApp.Service.Services
         {
             var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
             if (existOrder is null)
-                throw new HttpStatusCodeException(404, "Delivery not found");
+                throw new HttpStatusCodeException(404, "Order not found");
             if (existOrder.CourierId is not null)
                 throw new HttpStatusCodeException(400, "Order is taken by another courier");
 
@@ -177,6 +179,65 @@ namespace UyutMiniApp.Service.Services
             existOrder.CourierId = HttpContextHelper.UserId;
             
 
+            orderRepository.Update(existOrder);
+            await orderRepository.SaveChangesAsync();
+        }
+        public async Task RejectOrder(Guid orderId)
+        {
+            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
+            if (existOrder is null)
+                throw new HttpStatusCodeException(404, "Order not found");
+
+            if (existOrder.CourierId is not null && existOrder.CourierId == HttpContextHelper.UserId)
+                existOrder.CourierId = null;
+
+            var availableCouriers = genericRepository.GetAll(
+                                    false, c => c.IsAvailable == true && c.IsWorking == true);
+            if (availableCouriers.Count() == 0)
+                throw new HttpStatusCodeException(400, "No active couriers");
+
+            string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
+            string messageText =
+                $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\nНомер телефона: {existOrder.User.PhoneNumber}\n\nПозиции:\n";
+            string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
+            foreach (var meals in existOrder.Items)
+            {
+                messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
+            }
+            messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}";
+            foreach (var c in availableCouriers)
+            {
+                var payload = new
+                {
+                    chat_id = c.TelegramUserId,
+                    text = messageText,
+                    reply_markup = new
+                    {
+                        inline_keyboard = new List<object>
+                            {
+                                new[]
+                                {
+                                    new {
+                                        text = "✅ Принять",
+                                        callback_data = $"accepted:{existOrder.Id}"
+                                    }
+                                },
+                                new[]
+                                {
+                                    new {
+                                        text = "❌ Отказаться",
+                                        callback_data = $"rejected:{existOrder.Id}"
+                                    }
+                                }
+                            }
+                    }
+                };
+
+                using var client = new HttpClient();
+                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(url, content);
+                string responseText = await response.Content.ReadAsStringAsync();
+            }
             orderRepository.Update(existOrder);
             await orderRepository.SaveChangesAsync();
         }
