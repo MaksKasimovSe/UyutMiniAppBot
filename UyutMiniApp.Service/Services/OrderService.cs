@@ -50,7 +50,7 @@ namespace UyutMiniApp.Service.Services
             var newOrder = dto.Adapt<Order>();
 
             newOrder.Status = OrderStatus.Pending;
-            var lastOrder = await genericRepository.GetAll().OrderByDescending(o => o.CreatedAt).FirstOrDefaultAsync();
+            var lastOrder = await genericRepository.GetAll(false).OrderByDescending(o => o.CreatedAt).FirstOrDefaultAsync();
             if (lastOrder is null)
                 newOrder.OrderNumber = 1;
             else if (lastOrder.OrderNumber == 100)
@@ -128,7 +128,8 @@ namespace UyutMiniApp.Service.Services
                         throw new HttpStatusCodeException(400, "No active couriers");
 
                     string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";
-                    string messageText = $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\n\nПозиции:\n";
+                    string messageText =
+                        $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\nНомер телефона: {existOrder.User.PhoneNumber}\n\nПозиции:\n";
                     string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
                     foreach (var meals in existOrder.Items)
                     {
@@ -188,6 +189,7 @@ namespace UyutMiniApp.Service.Services
             var orders = genericRepository.GetAll(false, o => o.CreatedAt.Date == DateTime.UtcNow.Date, includes: ["Items", "Items.MenuItem","User"]);
 
             var dtoOrders = await orders.Where(o => o.User.Id == HttpContextHelper.UserId).ToListAsync();
+            
             return dtoOrders.Adapt<List<ViewOrderDto>>();
         }
     }
