@@ -59,7 +59,10 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
 
             totalPrice = totalPrice - newOrder.OrderNumber;
-            totalPrice -= (totalPrice / 100 * 10);
+
+            var orders = genericRepository.GetAll(false,o => o.UserId == HttpContextHelper.UserId);
+            if (orders.Count() == 0)
+                totalPrice -= (totalPrice / 100 * 10);
 
             newOrder.TotalAmount = totalPrice;
 
