@@ -15,12 +15,18 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class OrderController(IOrderService orderService, IHubContext<ChatHub> hubContext, IHubContext<OrderCheckHub> orderCheckHub, IHubContext<OrderProcessHub> orderProcessHub) : ControllerBase
     {
-        [HttpPost, Authorize]
+        [HttpPost, Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto)
         {
             var res = await orderService.CreateAsync(createOrderDto);
-            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{res.Id}:{HttpContextHelper.UserId}", JsonConvert.SerializeObject(res));
             return Ok(res);
+        }
+
+        [HttpPost("client/paid"), Authorize(Roles = "User, Admin")]
+        public async Task ClientPaid(ClientPaidDto dto)
+        {
+            var order = await orderService.GetAsync(dto.OrderId);
+            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{dto.OrderId}:{HttpContextHelper.UserId}", JsonConvert.SerializeObject(order));
         }
 
         [HttpGet("{id}"), Authorize(Roles = "User, Admin")]

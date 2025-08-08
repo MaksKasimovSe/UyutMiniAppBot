@@ -85,14 +85,14 @@ namespace UyutMiniApp.Service.Services
             }
             await genericRepository.SaveChangesAsync();
 
-            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes:["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"]);
+            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes:["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking: false);
            
             return newOrder.Adapt<ViewOrderDto>();
         }
 
         public async Task<ViewOrderDto> GetAsync(Guid id)
         {
-            var existOrder = await genericRepository.GetAsync(o => o.Id == id);
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id,includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking:false);
 
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "order not found");
