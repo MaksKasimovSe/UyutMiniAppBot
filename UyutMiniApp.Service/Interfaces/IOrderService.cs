@@ -13,5 +13,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task ChangeStatus(Guid id, OrderStatus status);
         Task ChangeProcess(Guid id, OrderProcess orderProcess);
         Task<IEnumerable<ViewOrderDto>> GetTodaysOrders();
+        Task SetPaymentMethod(Guid orderId, PaymentMethod paymentMethod);
     }
 }

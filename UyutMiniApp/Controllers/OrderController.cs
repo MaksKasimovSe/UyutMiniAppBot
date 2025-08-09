@@ -25,7 +25,9 @@ namespace UyutMiniApp.Controllers
         [HttpPost("client/paid"), Authorize(Roles = "User, Admin")]
         public async Task ClientPaid(ClientPaidDto dto)
         {
+
             var order = await orderService.GetAsync(dto.OrderId);
+            await orderService.SetPaymentMethod(dto.OrderId,dto.PaymentMethod);
             await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{dto.OrderId}:{HttpContextHelper.UserId}", JsonConvert.SerializeObject(order));
         }
 

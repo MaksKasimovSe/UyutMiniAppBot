@@ -204,5 +204,15 @@ namespace UyutMiniApp.Service.Services
 
             return dtoOrders.Adapt<List<ViewOrderDto>>();
         }
+
+        public async Task SetPaymentMethod(Guid orderId, PaymentMethod paymentMethod)
+        {
+            var order = await genericRepository.GetAsync(o => o.Id == orderId);
+            if (order is null)
+                throw new HttpStatusCodeException(404, "Order not found");
+            order.PaymentMethod = paymentMethod;
+            genericRepository.Update(order);
+            await genericRepository.SaveChangesAsync();
+        }
     }
 }
