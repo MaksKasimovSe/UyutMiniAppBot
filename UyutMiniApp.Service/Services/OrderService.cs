@@ -57,7 +57,7 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = 1;
             else
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
-            if (newOrder.PaymentMethod == PaymentMethod.Transfer)
+            if (dto.Type == OrderType.Delivery)
                 totalPrice = totalPrice - newOrder.OrderNumber;
 
             var orders = genericRepository.GetAll(false,o => o.UserId == HttpContextHelper.UserId);
