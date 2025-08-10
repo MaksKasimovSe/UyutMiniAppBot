@@ -1,2 +1,0 @@
-2025-07-20 16:16:33.873 +09:00 [Error] [Microsoft.EntityFrameworkCore.Database.Command] [{ Id: 20102, Name: "Microsoft.EntityFrameworkCore.Database.Command.CommandError" }] Failed executing DbCommand ("157"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
-""CREATE UNIQUE INDEX \"IX_SetItems_MenuItemId\" ON \"SetItems\" (\"MenuItemId\");"

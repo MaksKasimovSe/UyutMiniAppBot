@@ -192,9 +192,9 @@ namespace UyutMiniApp.Service.Services
             {
                 existOrder.CourierId = null;
 
-                var availableCouriers = genericRepository.GetAll(
-                                        false, c => c.IsAvailable == true && c.IsWorking == true);
-                if (availableCouriers.Count() == 0)
+                var availableCouriers = await genericRepository.GetAll(
+                                        false, c => c.IsAvailable == true && c.IsWorking == true).ToListAsync();
+                if (availableCouriers.Count == 0)
                     throw new HttpStatusCodeException(400, "No active couriers");
 
                 string botToken = "8259246379:AAH4rLnUXnriLV31BNLahU8O7LkNxI4x8Ro";

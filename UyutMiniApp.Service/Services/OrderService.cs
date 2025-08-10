@@ -51,14 +51,15 @@ namespace UyutMiniApp.Service.Services
 
             newOrder.Status = OrderStatus.Pending;
             var lastOrder = await genericRepository.GetAll(false).OrderByDescending(o => o.CreatedAt).FirstOrDefaultAsync();
+            
             if (lastOrder is null)
                 newOrder.OrderNumber = 1;
             else if (lastOrder.OrderNumber == 100)
                 newOrder.OrderNumber = 1;
             else
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
-            if (dto.Type == OrderType.Delivery)
-                totalPrice = totalPrice - newOrder.OrderNumber;
+            //if (dto.Type == OrderType.Delivery)
+            //    totalPrice = totalPrice - newOrder.OrderNumber;
 
             var orders = genericRepository.GetAll(false,o => o.UserId == HttpContextHelper.UserId);
             if (orders.Count() == 0)

@@ -1,17 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics.Metrics;
+using System.Net;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Couriers;
 using UyutMiniApp.Service.DTOs.Users;
+using UyutMiniApp.Service.Exceptions;
+using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 using UyutMiniApp.Signalr;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace UyutMiniApp.Controllers
 {
     [ApiController, Route("[controller]")]
-    public class CourierController(ICourierService courierService, IHubContext<OrderProcessHub> hubContext) : ControllerBase
+    public class CourierController(ICourierService courierService, IHubContext<OrderProcessHub> hubContext, IHubContext<CourierHub> courierHub) : ControllerBase
     {
         [HttpPost("register"), Authorize(Roles = "Admin")]
         public async Task AddAsync(CreateCourierDto dto) =>
@@ -59,11 +64,32 @@ namespace UyutMiniApp.Controllers
         }
 
         [HttpPatch("accept-order/{orderId}"), Authorize(Roles = "Courier")]
-        public async Task AcceptOrder([FromRoute] Guid orderId) =>
+        public async Task AcceptOrder([FromRoute] Guid orderId)
+        {
+            var courier = await courierService.GetByIdAsync(long.Parse(HttpContextHelper.TelegramId));
+            var text = $"Курьер {courier.Name} - {courier.PhoneNumber} принял заказ и направляестся в кафе";
+
             await courierService.AcceptOrder(orderId);
-        
+            await courierHub.Clients.All.SendAsync("ReceiveMessage", orderId, text);
+        }
+
         [HttpPatch("reject-order/{orderId}"), Authorize(Roles = "Courier")]
-        public async Task RejectOrder([FromRoute] Guid orderId) =>
-            await courierService.RejectOrder(orderId);
+        public async Task RejectOrder([FromRoute] Guid orderId)
+        {
+            var courier = await courierService.GetByIdAsync(long.Parse(HttpContextHelper.TelegramId));
+            var text = $"Курьер {courier.Name} - {courier.PhoneNumber} отменил заказ";
+            try
+            {
+                await courierService.RejectOrder(orderId);
+            }
+            catch (HttpStatusCodeException)
+            {
+                text += "\nНет свободных курьеров для передачи заказа";
+            }
+            finally
+            {
+                await courierHub.Clients.All.SendAsync("ReceiveMessage", orderId, text);
+            }
+        }
     }
 }
