@@ -191,7 +191,7 @@ namespace UyutMiniApp.Service.Services
             if (existOrder.CourierId is not null && existOrder.CourierId == HttpContextHelper.UserId)
             {
                 existOrder.CourierId = null;
-
+                existOrder.OrderProcess = OrderProcess.Cooking;
                 var availableCouriers = await genericRepository.GetAll(
                                         false, c => c.IsAvailable == true && c.IsWorking == true).ToListAsync();
                 if (availableCouriers.Count == 0)
