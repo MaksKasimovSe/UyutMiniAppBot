@@ -63,6 +63,8 @@ namespace UyutMiniApp.Service.Services
             var orders = genericRepository.GetAll(false,o => o.UserId == HttpContextHelper.UserId);
             if (orders.Count() == 0)
                 totalPrice -= (totalPrice / 100 * 10);
+            
+            totalPrice = Math.Floor(totalPrice);
 
             newOrder.TotalAmount = totalPrice;
 
