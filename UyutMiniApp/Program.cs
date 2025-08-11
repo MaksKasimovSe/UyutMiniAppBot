@@ -99,6 +99,7 @@ app.MapControllers();
 app.MapHub<ChatHub>("/chathub").RequireAuthorization();
 app.MapHub<OrderCheckHub>("/orderchekhub").RequireAuthorization();
 app.MapHub<OrderProcessHub>("/orderprocesshub").RequireAuthorization();
+app.MapHub<CourierHub>("/courierhub").RequireAuthorization();
 
 
 app.UseWebSockets();
