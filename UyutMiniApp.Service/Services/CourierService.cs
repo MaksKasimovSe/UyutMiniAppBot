@@ -127,7 +127,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task StartDelivery(Guid orderId)
         {
-            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
+            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId && o.CourierId == HttpContextHelper.UserId);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Delivery not found");
             if (existOrder.OrderProcess == OrderProcess.Delivering ||
@@ -142,7 +142,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task FinishDelivery(Guid orderId)
         {
-            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId);
+            var existOrder = await orderRepository.GetAsync(o => o.Id == orderId && o.CourierId == HttpContextHelper.UserId);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Delivery not found");
             var existCourier = await genericRepository.GetAsync(o => o.Id == HttpContextHelper.UserId);
