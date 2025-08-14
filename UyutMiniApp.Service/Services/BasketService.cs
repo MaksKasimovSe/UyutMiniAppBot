@@ -68,7 +68,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<ViewBasketDto> GetBasket()
         {
-            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId,includes: ["MenuItemsBaskets"], isTracking: false);
+            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId,includes: ["MenuItemsBaskets", "MenuItemsBaskets.MenuItem"], isTracking: false);
             if (basket is null)
                 throw new HttpStatusCodeException(404, "Basket does not exist create it first");
 
