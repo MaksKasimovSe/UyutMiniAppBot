@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Category;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
@@ -30,8 +31,8 @@ namespace UyutMiniApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories() =>
-            Ok(await categoryService.GetAllAsync());
+        public async Task<IActionResult> GetAllCategories([FromQuery] CategoryFor categoryFor = CategoryFor.MenuItems) =>
+            Ok(await categoryService.GetAllAsync(categoryFor));
 
         [HttpGet("stock")]
         public async Task<IActionResult> GetAllStockCategories() =>

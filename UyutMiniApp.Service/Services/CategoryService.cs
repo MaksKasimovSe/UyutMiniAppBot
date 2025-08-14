@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
+using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Category;
 using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Helpers;
@@ -49,9 +50,9 @@ namespace UyutMiniApp.Service.Services
             await repository.SaveChangesAsync();
         }
 
-        public async Task<List<ViewCategoryDto>> GetAllAsync()
+        public async Task<List<ViewCategoryDto>> GetAllAsync(CategoryFor categoryFor)
         {
-            var categories = repository.GetAll(false)
+            var categories = repository.GetAll(false, c => c.CategoryFor == categoryFor)
                                         .Include(c => c.MenuItems)
                                             .ThenInclude(mi => mi.SetItems)
                                                 .ThenInclude(si => si.ReplacementOptions)
@@ -59,7 +60,7 @@ namespace UyutMiniApp.Service.Services
                                         .Include(c => c.MenuItems)
                                             .ThenInclude(mi => mi.SetItems)
                                                 .ThenInclude(si => si.IncludedItem)
-                                        .Include(c => c.Ingredients); ;
+                                        .Include(c => c.Ingredients);
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
             
