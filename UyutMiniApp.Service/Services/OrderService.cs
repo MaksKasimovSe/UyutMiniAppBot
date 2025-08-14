@@ -210,12 +210,38 @@ namespace UyutMiniApp.Service.Services
 
         public async Task SetPaymentMethod(Guid orderId, PaymentMethod paymentMethod)
         {
-            var order = await genericRepository.GetAsync(o => o.Id == orderId);
-            if (order is null)
+            var existOrder = await genericRepository.GetAsync(o => o.Id == orderId,includes: ["Items", "Items.MenuItem", "User", "DeliveryInfo"]);
+            var admins = await userRepository.GetAll(false, u => u.Role == Role.Admin).ToListAsync();
+
+            if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Order not found");
-            order.PaymentMethod = paymentMethod;
-            genericRepository.Update(order);
+            existOrder.PaymentMethod = paymentMethod;
+            genericRepository.Update(existOrder);
             await genericRepository.SaveChangesAsync();
+
+            string botToken = "8474382015:AAGGc8vkX8Sf19mpG3ghHE7LmJQcAqvwx3E";
+            string messageText =
+                $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\nНомер телефона: {existOrder.User.PhoneNumber}\n\nПозиции:\n";
+            string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
+            foreach (var meals in existOrder.Items)
+            {
+                messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
+            }
+            messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}\n\n";
+            messageText += "Для принятия заказа подойдите к кассе";
+            foreach (var c in admins)
+            {
+                var payload = new
+                {
+                    chat_id = c.TelegramUserId,
+                    text = messageText,
+                };
+
+                using var client = new HttpClient();
+                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(url, content);
+                string responseText = await response.Content.ReadAsStringAsync();
+            }
         }
     }
 }

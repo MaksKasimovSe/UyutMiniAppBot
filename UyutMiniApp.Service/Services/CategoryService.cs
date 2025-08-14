@@ -30,6 +30,8 @@ namespace UyutMiniApp.Service.Services
             if (existCategory is null)
                 throw new HttpStatusCodeException(404, "Category does not exist");
 
+            if (existCategory.ImageUrl is not null)
+                FileHelper.Remove(existCategory.ImageUrl);
             await repository.DeleteAsync(c => c.Id == id);
             await repository.SaveChangesAsync();
         }
@@ -40,7 +42,9 @@ namespace UyutMiniApp.Service.Services
 
             if (existCategory is null)
                 throw new HttpStatusCodeException(404, "Category does not exist");
-
+            
+            if (existCategory.ImageUrl is not null)
+                FileHelper.Remove(existCategory.ImageUrl);
             repository.Update(dto.Adapt(existCategory));
             await repository.SaveChangesAsync();
         }

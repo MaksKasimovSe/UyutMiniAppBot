@@ -30,7 +30,7 @@ namespace UyutMiniApp.Controllers
             await fileStream.FlushAsync();
             fileStream.Close();
             dto.ImageUrl = $"/images/{fileName}";
-
+            
             await menuItemService.CreateAsync(dto);
         }
 

@@ -6,10 +6,9 @@ namespace UyutMiniApp.Domain.Entities
     public class Category : Auditable
     {
         public string Name { get; set; }
-
+        public string ImageUrl { get; set; }
         public CategoryFor CategoryFor { get; set; }
         public ICollection<MenuItem> MenuItems { get; set; }
         public ICollection<Ingredient> Ingredients { get; set; }
     }
-
 }

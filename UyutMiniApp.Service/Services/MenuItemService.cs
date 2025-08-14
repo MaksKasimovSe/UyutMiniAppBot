@@ -47,7 +47,7 @@ namespace UyutMiniApp.Service.Services
             var alreadyExistMenuItem = await genericRepository.GetAsync(mi => mi.Name == dto.Name && mi.Id != id);
             if (alreadyExistMenuItem is not null)
                 throw new HttpStatusCodeException(404, "Menu item with given name already exist");
-
+            FileHelper.Remove(existMenuItem.ImageUrl);
             var menuItems = genericRepository.Update(dto.Adapt(existMenuItem));
             await genericRepository.SaveChangesAsync();
         }
