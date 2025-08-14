@@ -1,0 +1,2 @@
+2025-08-14 20:24:04.885 +09:00 [Error] [Microsoft.EntityFrameworkCore.Database.Command] [{ Id: 20102, Name: "Microsoft.EntityFrameworkCore.Database.Command.CommandError" }] Failed executing DbCommand ("163"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""ALTER TABLE \"Users\" ADD CONSTRAINT \"FK_Users_Baskets_BasketId\" FOREIGN KEY (\"BasketId\") REFERENCES \"Baskets\" (\"Id\") ON DELETE CASCADE;"

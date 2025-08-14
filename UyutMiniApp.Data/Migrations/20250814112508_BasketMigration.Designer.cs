@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UyutMiniApp.Data.Contexts;
@@ -11,9 +12,11 @@ using UyutMiniApp.Data.Contexts;
 namespace UyutMiniApp.Data.Migrations
 {
     [DbContext(typeof(UyutMiniAppDbContext))]
-    partial class UyutMiniAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250814112508_BasketMigration")]
+    partial class BasketMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,16 +34,13 @@ namespace UyutMiniApp.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Baskets");
                 });
@@ -322,9 +322,6 @@ namespace UyutMiniApp.Data.Migrations
                     b.Property<Guid>("MenuItemId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -541,6 +538,9 @@ namespace UyutMiniApp.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BasketId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -564,23 +564,14 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BasketId");
+
                     b.HasIndex("SavedAddressId");
 
                     b.HasIndex("TelegramUserId")
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("UyutMiniApp.Domain.Entities.Basket", b =>
-                {
-                    b.HasOne("UyutMiniApp.Domain.Entities.User", "User")
-                        .WithOne()
-                        .HasForeignKey("UyutMiniApp.Domain.Entities.Basket", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.CustomMealIngredient", b =>
@@ -778,9 +769,15 @@ namespace UyutMiniApp.Data.Migrations
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.User", b =>
                 {
+                    b.HasOne("UyutMiniApp.Domain.Entities.Basket", "Basket")
+                        .WithMany()
+                        .HasForeignKey("BasketId");
+
                     b.HasOne("UyutMiniApp.Domain.Entities.SavedAddress", "SavedAddress")
                         .WithMany()
                         .HasForeignKey("SavedAddressId");
+
+                    b.Navigation("Basket");
 
                     b.Navigation("SavedAddress");
                 });

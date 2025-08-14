@@ -19,7 +19,8 @@ namespace UyutMiniApp.Service.Services
         IGenericRepository<SavedAddress> addressRepository,
         IGenericRepository<User> userRepository,
         IGenericRepository<MenuItem> menuItemRepository,
-        IGenericRepository<Courier> courierRepository) : IOrderService
+        IGenericRepository<Courier> courierRepository, 
+        IGenericRepository<Basket> basketRepository) : IOrderService
     {
         public async Task<ViewOrderDto> CreateAsync(CreateOrderDto dto)
         {
@@ -217,7 +218,14 @@ namespace UyutMiniApp.Service.Services
                 throw new HttpStatusCodeException(404, "Order not found");
             existOrder.PaymentMethod = paymentMethod;
             genericRepository.Update(existOrder);
+
+            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId);
+
+            basket.Items.Clear();
+
             await genericRepository.SaveChangesAsync();
+
+            
 
             string botToken = "8474382015:AAGGc8vkX8Sf19mpG3ghHE7LmJQcAqvwx3E";
             string messageText =

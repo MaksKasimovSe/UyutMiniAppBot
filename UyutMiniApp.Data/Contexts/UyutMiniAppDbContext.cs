@@ -40,6 +40,8 @@ namespace UyutMiniApp.Data.Contexts
         public DbSet<SetReplacementSelection> SetReplacementSelections { get; set; }
         public DbSet<IngredientRecommendation> IngredientRecommendations { get; set; }
         public DbSet<SavedAddress> SavedAddresses { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+        public DbSet<MenuItemBasket> MenuItemsBaskets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +51,16 @@ namespace UyutMiniApp.Data.Contexts
                 .IsUnique();
 
             // Optional: restrict deletes where needed (to prevent cascade issues)
+
+           modelBuilder.Entity<MenuItemBasket>()
+               .HasOne(mb => mb.MenuItem)
+               .WithMany()
+               .HasForeignKey(mb => mb.MenuItemId);
+
+
+            modelBuilder.Entity<Basket>()
+                .HasOne(u => u.User)
+                .WithOne();
 
             modelBuilder.Entity<SetItem>()
                 .HasOne(si => si.MenuItem)
