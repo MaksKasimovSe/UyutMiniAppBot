@@ -22,6 +22,29 @@ namespace UyutMiniApp.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("UyutMiniApp.Domain.Entities.Basket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Baskets");
+                });
+
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -33,6 +56,9 @@ namespace UyutMiniApp.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -281,6 +307,36 @@ namespace UyutMiniApp.Data.Migrations
                     b.ToTable("MenuItems");
                 });
 
+            modelBuilder.Entity("UyutMiniApp.Domain.Entities.MenuItemBasket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BasketId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MenuItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BasketId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.ToTable("MenuItemsBaskets");
+                });
+
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -516,6 +572,17 @@ namespace UyutMiniApp.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("UyutMiniApp.Domain.Entities.Basket", b =>
+                {
+                    b.HasOne("UyutMiniApp.Domain.Entities.User", "User")
+                        .WithOne()
+                        .HasForeignKey("UyutMiniApp.Domain.Entities.Basket", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.CustomMealIngredient", b =>
                 {
                     b.HasOne("UyutMiniApp.Domain.Entities.CustomMeal", "CustomMeal")
@@ -581,6 +648,25 @@ namespace UyutMiniApp.Data.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("UyutMiniApp.Domain.Entities.MenuItemBasket", b =>
+                {
+                    b.HasOne("UyutMiniApp.Domain.Entities.Basket", "Basket")
+                        .WithMany("MenuItemsBaskets")
+                        .HasForeignKey("BasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UyutMiniApp.Domain.Entities.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Basket");
+
+                    b.Navigation("MenuItem");
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Order", b =>
@@ -697,6 +783,11 @@ namespace UyutMiniApp.Data.Migrations
                         .HasForeignKey("SavedAddressId");
 
                     b.Navigation("SavedAddress");
+                });
+
+            modelBuilder.Entity("UyutMiniApp.Domain.Entities.Basket", b =>
+                {
+                    b.Navigation("MenuItemsBaskets");
                 });
 
             modelBuilder.Entity("UyutMiniApp.Domain.Entities.Category", b =>

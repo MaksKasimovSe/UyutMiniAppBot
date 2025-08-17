@@ -12,7 +12,7 @@ using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Service.Services
 {
-    public class UserService(IGenericRepository<User> genericRepository, IGenericRepository<Order> orderRepository, IConfiguration configuration) : IUserService
+    public class UserService(IGenericRepository<User> genericRepository, IGenericRepository<Order> orderRepository, IGenericRepository<Basket> basketRepository, IConfiguration configuration) : IUserService
     {
         public async Task AddAsync(CreateUserDto dto)
         {
@@ -21,7 +21,14 @@ namespace UyutMiniApp.Service.Services
             if (existUser != null)
                 throw new HttpStatusCodeException(400, "Phone number or telegram account already registered");
 
-            await genericRepository.CreateAsync(dto.Adapt<User>());
+            var newUser = await genericRepository.CreateAsync(dto.Adapt<User>());
+
+            var basket = new Basket()
+            {
+                UserId = newUser.Id
+            };
+
+            await basketRepository.CreateAsync(basket);
             await genericRepository.SaveChangesAsync();
         }
 
@@ -67,13 +74,13 @@ namespace UyutMiniApp.Service.Services
             var user = await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId);
             if (user is null)
                 throw new HttpStatusCodeException(404, "User not found");
-            int count = orderRepository.GetAll(false,o => o.UserId == user.Id).Count();
+            int count = orderRepository.GetAll(false, o => o.UserId == user.Id).Count();
             var dto = user.Adapt<ViewUserDto>();
             if (count == 0)
                 dto.HasOrders = false;
             else
                 dto.HasOrders = true;
-            
+
             return dto;
         }
     }

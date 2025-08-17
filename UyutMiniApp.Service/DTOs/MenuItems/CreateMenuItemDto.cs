@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Runtime.Serialization;
 using UyutMiniApp.Service.DTOs.SetItems;
 
 namespace UyutMiniApp.Service.DTOs.MenuItems;

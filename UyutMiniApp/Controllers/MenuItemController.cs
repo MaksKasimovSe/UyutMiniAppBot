@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.MenuItems;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
