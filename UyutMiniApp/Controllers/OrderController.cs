@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Orders;
 using UyutMiniApp.Service.Helpers;
@@ -17,17 +18,9 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> CreateAsync(CreateOrderDto createOrderDto)
         {
             var res = await orderService.CreateAsync(createOrderDto);
+            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{res.Id}:{HttpContextHelper.UserId}", JsonConvert.SerializeObject(res));
+
             return Ok(res);
-        }
-
-        [HttpPost("client/paid"), Authorize(Roles = "User, Admin")]
-        public async Task ClientPaid(ClientPaidDto dto)
-        {
-            await orderService.SetPaymentMethod(dto.OrderId, dto.PaymentMethod);
-
-            var order = await orderService.GetAsync(dto.OrderId);
-            order.PaymentMethod = dto.PaymentMethod;
-            await orderCheckHub.Clients.All.SendAsync("ReceiveMessage", $"{HttpContextHelper.TelegramId}:{dto.OrderId}:{HttpContextHelper.UserId}", JsonConvert.SerializeObject(order));
         }
 
         [HttpGet("{id}"), Authorize(Roles = "User, Admin")]
