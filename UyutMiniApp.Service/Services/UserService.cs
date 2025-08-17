@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,7 +20,7 @@ namespace UyutMiniApp.Service.Services
 
             if (existUser != null)
                 throw new HttpStatusCodeException(400, "Phone number or telegram account already registered");
-            
+
             var newUser = await genericRepository.CreateAsync(dto.Adapt<User>());
 
             var basket = new Basket()
@@ -72,16 +71,16 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<ViewUserDto> GetAsync(long telegramUserId)
         {
-            var user = await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId, includes: ["Basket"]);
+            var user = await genericRepository.GetAsync(u => u.TelegramUserId == telegramUserId);
             if (user is null)
                 throw new HttpStatusCodeException(404, "User not found");
-            int count = orderRepository.GetAll(false,o => o.UserId == user.Id).Count();
+            int count = orderRepository.GetAll(false, o => o.UserId == user.Id).Count();
             var dto = user.Adapt<ViewUserDto>();
             if (count == 0)
                 dto.HasOrders = false;
             else
                 dto.HasOrders = true;
-            
+
             return dto;
         }
     }

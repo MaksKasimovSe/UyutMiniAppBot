@@ -1,7 +1,5 @@
-﻿using UyutMiniApp.Data.Repositories;
-using UyutMiniApp.Domain.Enums;
+﻿using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Orders;
-using UyutMiniApp.Service.Exceptions;
 
 namespace UyutMiniApp.Service.Interfaces
 {

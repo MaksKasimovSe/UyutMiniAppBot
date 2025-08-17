@@ -9,7 +9,7 @@ namespace UyutMiniApp.Controllers
     public class BasketController(IBasketService basketService) : ControllerBase
     {
         [HttpPost, Authorize(Roles = "User, Admin")]
-        public async Task AddAsync(CreateBasketDto dto) => 
+        public async Task AddAsync(CreateBasketDto dto) =>
             await basketService.CreateAsync(dto);
 
         [HttpPost("item"), Authorize(Roles = "User, Admin")]

@@ -1,9 +1,6 @@
 ﻿using Mapster;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -78,7 +75,7 @@ namespace UyutMiniApp.Service.Services
                 orderRepository.GetAll(false, o => o.CourierId == dto.Id);
                 dto.NumberOfOrders = dtoCouriers.Count();
             }
-            
+
             return dtoCouriers;
         }
 
@@ -106,7 +103,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task StartWorkingDay()
         {
-            var existCourier = await genericRepository.GetAsync(c => c.Id == HttpContextHelper.UserId);;
+            var existCourier = await genericRepository.GetAsync(c => c.Id == HttpContextHelper.UserId); ;
             if (existCourier is null)
                 throw new HttpStatusCodeException(404, "Courier not found");
 
@@ -169,15 +166,15 @@ namespace UyutMiniApp.Service.Services
 
             var existCourier = await genericRepository.GetAsync(o => o.Id == HttpContextHelper.UserId);
             if (existCourier is null)
-                throw new HttpStatusCodeException(404,"Courier not found");
+                throw new HttpStatusCodeException(404, "Courier not found");
 
             existCourier.IsAvailable = false;
 
             genericRepository.Update(existCourier);
             await genericRepository.SaveChangesAsync();
-            
+
             existOrder.CourierId = HttpContextHelper.UserId;
-            
+
 
             orderRepository.Update(existOrder);
             await orderRepository.SaveChangesAsync();
@@ -187,7 +184,7 @@ namespace UyutMiniApp.Service.Services
             var existOrder = await orderRepository.GetAsync(o => o.Id == orderId, ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"]);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Order not found");
-            
+
             if (existOrder.CourierId is not null && existOrder.CourierId == HttpContextHelper.UserId)
             {
                 existOrder.CourierId = null;
@@ -217,7 +214,7 @@ namespace UyutMiniApp.Service.Services
                             inline_keyboard = new List<object>
                             {
                                 new[]
-                                {   
+                                {
                                     new {
                                         text = "✅ Принять",
                                         callback_data = $"accepted:{existOrder.Id}"

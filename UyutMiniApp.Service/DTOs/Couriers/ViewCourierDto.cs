@@ -1,6 +1,3 @@
-using UyutMiniApp.Domain.Entities;
-using UyutMiniApp.Service.DTOs.Orders;
-
 namespace UyutMiniApp.Service.DTOs.Couriers;
 public class ViewCourierDto
 {

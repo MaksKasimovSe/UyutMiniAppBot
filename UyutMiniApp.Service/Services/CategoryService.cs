@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using NpgsqlTypes;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
@@ -43,7 +42,7 @@ namespace UyutMiniApp.Service.Services
 
             if (existCategory is null)
                 throw new HttpStatusCodeException(404, "Category does not exist");
-            
+
             if (existCategory.ImageUrl is not null)
                 FileHelper.Remove(existCategory.ImageUrl);
             repository.Update(dto.Adapt(existCategory));
@@ -63,7 +62,7 @@ namespace UyutMiniApp.Service.Services
                                         .Include(c => c.Ingredients);
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
-            
+
             return viewCategories;
         }
 
@@ -72,7 +71,7 @@ namespace UyutMiniApp.Service.Services
             var categories = repository.GetAll(false);
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
-            
+
             return viewCategories;
         }
     }

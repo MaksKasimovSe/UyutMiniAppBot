@@ -6,7 +6,7 @@ namespace UyutMiniApp.Data.Contexts
     public class UyutMiniAppDbContext : DbContext
     {
         public UyutMiniAppDbContext(DbContextOptions<UyutMiniAppDbContext> options)
-        : base(options) 
+        : base(options)
         {
             Users.IgnoreAutoIncludes();
             Couriers.IgnoreAutoIncludes();
@@ -52,10 +52,10 @@ namespace UyutMiniApp.Data.Contexts
 
             // Optional: restrict deletes where needed (to prevent cascade issues)
 
-           modelBuilder.Entity<MenuItemBasket>()
-               .HasOne(mb => mb.MenuItem)
-               .WithMany()
-               .HasForeignKey(mb => mb.MenuItemId);
+            modelBuilder.Entity<MenuItemBasket>()
+                .HasOne(mb => mb.MenuItem)
+                .WithMany()
+                .HasForeignKey(mb => mb.MenuItemId);
 
 
             modelBuilder.Entity<Basket>()

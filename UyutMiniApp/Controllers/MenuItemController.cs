@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.MenuItems;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
@@ -30,7 +29,7 @@ namespace UyutMiniApp.Controllers
             await fileStream.FlushAsync();
             fileStream.Close();
             dto.ImageUrl = $"/images/{fileName}";
-            
+
             await menuItemService.CreateAsync(dto);
         }
 

@@ -1,10 +1,4 @@
 ﻿using Mapster;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.Basket;
@@ -34,7 +28,7 @@ namespace UyutMiniApp.Service.Services
                 throw new HttpStatusCodeException(400, "Basket does not exist create it first");
             var item = basket.MenuItemsBaskets.FirstOrDefault(mb => mb.MenuItemId == dto.MenuItemId);
             if (item is null)
-                throw new HttpStatusCodeException(400,"Item is not in basket");
+                throw new HttpStatusCodeException(400, "Item is not in basket");
             item.Quantity = dto.Quantity;
 
             await genericRepository.SaveChangesAsync();
@@ -42,7 +36,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task CreateAsync(CreateBasketDto dto)
         {
-            var alreadyExistBasket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, isTracking:false);
+            var alreadyExistBasket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, isTracking: false);
             if (alreadyExistBasket is not null)
                 throw new HttpStatusCodeException(400, "Basket already exist");
             var entityBasket = dto.Adapt<Basket>();
@@ -60,7 +54,7 @@ namespace UyutMiniApp.Service.Services
             var item = basket.MenuItemsBaskets.FirstOrDefault(mb => mb.MenuItemId == menuItemId);
             if (item is null)
                 throw new HttpStatusCodeException(400, "Item is not in basket");
-            
+
             basket.MenuItemsBaskets.Remove(item);
 
             await genericRepository.SaveChangesAsync();
@@ -68,7 +62,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<ViewBasketDto> GetBasket()
         {
-            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId,includes: ["MenuItemsBaskets", "MenuItemsBaskets.MenuItem"], isTracking: false);
+            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, includes: ["MenuItemsBaskets", "MenuItemsBaskets.MenuItem"], isTracking: false);
             if (basket is null)
                 throw new HttpStatusCodeException(404, "Basket does not exist create it first");
 

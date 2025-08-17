@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UyutMiniApp.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace UyutMiniApp.Service.DTOs.Basket
 {
     public class CreateBasketDto
     {
+        [Required]
         public ICollection<CreateMenuItemBasketDto> MenuItemsBaskets { get; set; }
     }
 }

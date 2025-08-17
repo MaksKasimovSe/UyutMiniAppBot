@@ -1,5 +1,3 @@
-using UyutMiniApp.Domain.Entities;
-using UyutMiniApp.Service.DTOs.Basket;
 namespace UyutMiniApp.Service.DTOs.Users;
 public class ViewUserDto
 {

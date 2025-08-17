@@ -1,9 +1,6 @@
 ﻿using Mapster;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
@@ -15,11 +12,11 @@ using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Service.Services
 {
-    public class OrderService(IGenericRepository<Order> genericRepository, 
+    public class OrderService(IGenericRepository<Order> genericRepository,
         IGenericRepository<SavedAddress> addressRepository,
         IGenericRepository<User> userRepository,
         IGenericRepository<MenuItem> menuItemRepository,
-        IGenericRepository<Courier> courierRepository, 
+        IGenericRepository<Courier> courierRepository,
         IGenericRepository<Basket> basketRepository) : IOrderService
     {
         public async Task<ViewOrderDto> CreateAsync(CreateOrderDto dto)
@@ -37,10 +34,10 @@ namespace UyutMiniApp.Service.Services
             totalPrice += dto.DeliveryInfo is null ? 0 : dto.DeliveryInfo.Fee;
 
 
-            if (dto.Type == OrderType.Delivery) 
+            if (dto.Type == OrderType.Delivery)
             {
                 if (dto.DeliveryInfo is null)
-                    throw new HttpStatusCodeException(400,"Adress should be given");
+                    throw new HttpStatusCodeException(400, "Adress should be given");
                 if (!dto.DeliveryInfo.Address.Contains("경기도 평택시 포승읍"))
                 {
                     throw new HttpStatusCodeException(400, "We don't deliver to that address");
@@ -52,7 +49,7 @@ namespace UyutMiniApp.Service.Services
 
             newOrder.Status = OrderStatus.Pending;
             var lastOrder = await genericRepository.GetAll(false).OrderByDescending(o => o.CreatedAt).FirstOrDefaultAsync();
-            
+
             if (lastOrder is null)
                 newOrder.OrderNumber = 1;
             else if (lastOrder.OrderNumber == 100)
@@ -62,10 +59,10 @@ namespace UyutMiniApp.Service.Services
             //if (dto.Type == OrderType.Delivery)
             //    totalPrice = totalPrice - newOrder.OrderNumber;
 
-            var orders = genericRepository.GetAll(false,o => o.UserId == HttpContextHelper.UserId);
+            var orders = genericRepository.GetAll(false, o => o.UserId == HttpContextHelper.UserId);
             if (orders.Count() == 0)
                 totalPrice -= (totalPrice / 100 * 10);
-            
+
             totalPrice = Math.Floor(totalPrice);
 
             newOrder.TotalAmount = totalPrice;
@@ -89,14 +86,14 @@ namespace UyutMiniApp.Service.Services
             }
             await genericRepository.SaveChangesAsync();
 
-            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes:["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking: false);
-           
+            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking: false);
+
             return newOrder.Adapt<ViewOrderDto>();
         }
 
         public async Task<ViewOrderDto> GetAsync(Guid id)
         {
-            var existOrder = await genericRepository.GetAsync(o => o.Id == id,includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking:false);
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking: false);
 
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "order not found");
@@ -112,13 +109,13 @@ namespace UyutMiniApp.Service.Services
             existOrder.OrderUrl = url;
             genericRepository.Update(existOrder);
             await genericRepository.SaveChangesAsync();
-            
+
             return url;
         }
 
         public async Task ChangeStatus(Guid id, OrderStatus status)
         {
-            var existOrder = await genericRepository.GetAsync(o => o.Id == id, ["Items.MenuItem","User","DeliveryInfo"]);
+            var existOrder = await genericRepository.GetAsync(o => o.Id == id, ["Items.MenuItem", "User", "DeliveryInfo"]);
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Order not found");
             existOrder.Status = status;
@@ -193,10 +190,10 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<IEnumerable<ViewOrderDto>> GetTodaysOrders()
         {
-            var orders = genericRepository.GetAll(false, o => o.CreatedAt.Date == DateTime.UtcNow.Date, includes: ["Items", "Items.MenuItem","User"]);
+            var orders = genericRepository.GetAll(false, o => o.CreatedAt.Date == DateTime.UtcNow.Date, includes: ["Items", "Items.MenuItem", "User"]);
 
             var dtoOrders = await orders.Where(o => o.User.Id == HttpContextHelper.UserId).ToListAsync();
-            
+
             return dtoOrders.Adapt<List<ViewOrderDto>>();
         }
 
@@ -211,7 +208,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task SetPaymentMethod(Guid orderId, PaymentMethod paymentMethod)
         {
-            var existOrder = await genericRepository.GetAsync(o => o.Id == orderId,includes: ["Items", "Items.MenuItem", "User", "DeliveryInfo"]);
+            var existOrder = await genericRepository.GetAsync(o => o.Id == orderId, includes: ["Items", "Items.MenuItem", "User", "DeliveryInfo"]);
             var admins = await userRepository.GetAll(false, u => u.Role == Role.Admin).ToListAsync();
 
             if (existOrder is null)
@@ -219,13 +216,13 @@ namespace UyutMiniApp.Service.Services
             existOrder.PaymentMethod = paymentMethod;
             genericRepository.Update(existOrder);
 
-            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId);
+            var basket = await basketRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId);
 
-            basket.Items.Clear();
+            basket.MenuItemsBaskets.Clear();
 
             await genericRepository.SaveChangesAsync();
 
-            
+
 
             string botToken = "8474382015:AAGGc8vkX8Sf19mpG3ghHE7LmJQcAqvwx3E";
             string messageText =

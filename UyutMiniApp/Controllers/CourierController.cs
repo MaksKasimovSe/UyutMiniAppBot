@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System.Diagnostics.Metrics;
-using System.Net;
-using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Couriers;
 using UyutMiniApp.Service.DTOs.Users;
@@ -11,7 +8,6 @@ using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 using UyutMiniApp.Signalr;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UyutMiniApp.Controllers
 {
@@ -29,7 +25,7 @@ namespace UyutMiniApp.Controllers
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task UpdateAsync(Guid id, UpdateCourierDto dto) =>
             await courierService.UpdateAsync(id, dto);
-        
+
         [HttpDelete("{id}")]
         public async Task DeleteAsync(Guid id) =>
             await courierService.DeleteAsync(id);

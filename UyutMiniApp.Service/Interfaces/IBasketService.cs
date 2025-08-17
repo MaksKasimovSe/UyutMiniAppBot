@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UyutMiniApp.Service.DTOs.Basket;
+﻿using UyutMiniApp.Service.DTOs.Basket;
 
 namespace UyutMiniApp.Service.Interfaces
 {

@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using System.Runtime.InteropServices;
-using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Orders;
 using UyutMiniApp.Service.Helpers;
@@ -25,7 +23,7 @@ namespace UyutMiniApp.Controllers
         [HttpPost("client/paid"), Authorize(Roles = "User, Admin")]
         public async Task ClientPaid(ClientPaidDto dto)
         {
-            await orderService.SetPaymentMethod(dto.OrderId,dto.PaymentMethod);
+            await orderService.SetPaymentMethod(dto.OrderId, dto.PaymentMethod);
 
             var order = await orderService.GetAsync(dto.OrderId);
             order.PaymentMethod = dto.PaymentMethod;
@@ -43,7 +41,7 @@ namespace UyutMiniApp.Controllers
             if (message.Status == OrderStatus.Paid)
             {
                 var orderProcess = OrderProcess.Cooking;
-                await orderService.ChangeProcess(message.Id,orderProcess);
+                await orderService.ChangeProcess(message.Id, orderProcess);
             }
             var order = await orderService.GetAsync(message.Id);
             await hubContext.Clients.All.SendAsync("ReceiveMessage", $"{order.User.TelegramUserId}:{message.Id.ToString()}:{order.User.Id}", Enum.GetName(message.Status));
@@ -76,7 +74,7 @@ namespace UyutMiniApp.Controllers
         [HttpPost("process"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> ChangeOrderMessage(SendProcessMessageDto dto)
         {
-            await orderService.ChangeProcess(dto.Id,dto.OrderProcess);
+            await orderService.ChangeProcess(dto.Id, dto.OrderProcess);
 
             var order = await orderService.GetAsync(dto.Id);
             await orderProcessHub.Clients.All.SendAsync("ReceiveMessage", $"{order.User.TelegramUserId}:{dto.Id}:{order.User.Id}", Enum.GetName(dto.OrderProcess));

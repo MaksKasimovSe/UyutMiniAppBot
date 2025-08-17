@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json.Serialization;
 using UyutMiniApp.Domain.Enums;
 
 namespace UyutMiniApp.Service.DTOs.Category
