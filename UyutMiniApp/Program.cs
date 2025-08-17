@@ -89,7 +89,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecific");
 
 app.UseAuthentication();
 app.UseAuthorization();
