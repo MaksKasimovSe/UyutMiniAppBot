@@ -49,7 +49,7 @@ namespace UyutMiniApp.Controllers
             await ingredientService.UpdateAsync(id, dto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetAsync([FromRoute] Guid id) =>
             Ok(await ingredientService.GetAsync(id));
 
@@ -57,7 +57,7 @@ namespace UyutMiniApp.Controllers
         public async Task DeleteAsync([FromRoute] Guid id) =>
             await ingredientService.DeleteAsync(id);
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllAsync() =>
             Ok(await ingredientService.GetAllAsync());
 

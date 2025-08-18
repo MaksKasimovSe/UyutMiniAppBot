@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace UyutMiniApp.Service.Helpers
 {
@@ -9,7 +10,7 @@ namespace UyutMiniApp.Service.Helpers
         public static IHeaderDictionary ResponseHeaders => HttpContext?.Response?.Headers;
         public static Guid? UserId => GetUserId();
         public static string TelegramId => HttpContext?.User.FindFirst("TelegramUserId")?.Value;
-        public static string Role => HttpContext?.User.FindFirst("Role")?.Value;
+        public static string Role => HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value;
         private static Guid? GetUserId()
         {
             string value = HttpContext?.User?.Claims.FirstOrDefault(p => p.Type == "Id")?.Value;

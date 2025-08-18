@@ -9,18 +9,18 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class UserController(IUserService userService) : ControllerBase
     {
-        [HttpPost("register")]
+        [HttpPost("register"), AllowAnonymous]
         public async Task<IActionResult> RegisterAsync(CreateUserDto dto)
         {
             await userService.AddAsync(dto);
             return Ok();
         }
 
-        [HttpPost("login")]
+        [HttpPost("login"), AllowAnonymous]
         public async Task<IActionResult> LoginAsync(LoginUserDto dto) =>
             Ok(await userService.GenerateToken(dto.TelegramUserId));
 
-        [HttpGet("{telegramUserId}")]
+        [HttpGet("{telegramUserId}"), AllowAnonymous]
         public async Task<IActionResult> GetAsync(long telegramUserId)
             => Ok(await userService.GetAsync(telegramUserId));
 

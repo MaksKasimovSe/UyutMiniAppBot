@@ -36,7 +36,7 @@ namespace UyutMiniApp.Controllers
         public async Task<IActionResult> GetAsync(Guid id) =>
             Ok(await orderService.GetAsync(id));
 
-        [HttpPost("send")]
+        [HttpPost("send"), Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> SendMessage(SendOrderMessageDto message)
         {
             await orderService.ChangeStatus(message.Id, message.Status);
@@ -51,7 +51,7 @@ namespace UyutMiniApp.Controllers
             return Ok(new { Status = "Message sent" });
         }
 
-        [HttpPost("receipt")]
+        [HttpPost("receipt"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadReceipt([FromQuery] Guid id, IFormFile receiptImage)
         {
             string fileName = Guid.NewGuid().ToString("N") + ".png";

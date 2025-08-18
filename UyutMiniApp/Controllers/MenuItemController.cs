@@ -10,7 +10,7 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class MenuItemController(IMenuItemService menuItemService) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllAsync([FromQuery] string search = "") =>
             Ok(await menuItemService.GetAllAsync(search));
 

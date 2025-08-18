@@ -1,4 +1,12 @@
-﻿using UyutMiniApp.Service.Exceptions;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using System.Security.Claims;
+using UyutMiniApp.Data.IRepositories;
+using UyutMiniApp.Domain.Entities;
+using UyutMiniApp.Domain.Enums;
+using UyutMiniApp.Service.Exceptions;
+using UyutMiniApp.Service.Helpers;
+using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Middlewares
 {
@@ -6,16 +14,53 @@ namespace UyutMiniApp.Middlewares
     {
         private readonly RequestDelegate next;
         private readonly ILogger<ExceptionHandlingMiddleware> logger;
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+        private readonly IConfiguration configuration;
+        private readonly IServiceScopeFactory scopeFactory;
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger, IConfiguration configuration, IServiceScopeFactory scopeFactory)
         {
             this.next = next;
             this.logger = logger;
+            this.configuration = configuration;
+            this.scopeFactory = scopeFactory;
         }
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IAuthorizationPolicyProvider policyProvider)
         {
             try
             {
-                await this.next.Invoke(context);
+                var endpoint = context.GetEndpoint();
+
+                // If there's no matched endpoint (e.g., 404), just continue.
+                if (endpoint is null)
+                {
+                    await this.next.Invoke(context);
+                    return;
+                }
+                var allowAnon = endpoint.Metadata.GetMetadata<IAllowAnonymous>();
+
+                string value = context?.User?.Claims.FirstOrDefault(p => p.Type == "Id")?.Value;
+
+                bool canParse = Guid.TryParse(value, out Guid id);
+                Guid? userId = canParse ? id : null;
+                var role = context?.User.FindFirst(ClaimTypes.Role)?.Value;
+                
+
+                using var scope = scopeFactory.CreateScope();
+                var userRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<User>>();
+                
+                if (allowAnon is not null)
+                    await this.next.Invoke(context);
+
+                else if (configuration["IsWorking"] == "true" || role == "Admin")
+                {
+                    var userRole = (Role)Enum.Parse(typeof(Role), role); 
+                    if (await userRepository.GetAsync(u => u.Id == userId && u.Role == userRole, isTracking: false) is not null)
+                        await this.next.Invoke(context);
+
+                    else
+                        throw new HttpStatusCodeException(401, "Unauthorized");
+                }
+                else
+                    throw new HttpStatusCodeException(400, "Cafe is closed right now comeback later");
             }
             catch (HttpStatusCodeException ex)
             {

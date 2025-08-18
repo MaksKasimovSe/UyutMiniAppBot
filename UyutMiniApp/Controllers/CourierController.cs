@@ -22,7 +22,7 @@ namespace UyutMiniApp.Controllers
         public async Task AddAsync(CreateCourierDto dto) =>
             await courierService.CreateAsync(dto);
 
-        [HttpPost("login")]
+        [HttpPost("login"), AllowAnonymous]
         public async Task<IActionResult> LoginAsync(LoginUserDto dto) =>
             Ok(await courierService.GenerateToken(dto.TelegramUserId));
 
@@ -30,7 +30,7 @@ namespace UyutMiniApp.Controllers
         public async Task UpdateAsync(Guid id, UpdateCourierDto dto) =>
             await courierService.UpdateAsync(id, dto);
         
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task DeleteAsync(Guid id) =>
             await courierService.DeleteAsync(id);
 

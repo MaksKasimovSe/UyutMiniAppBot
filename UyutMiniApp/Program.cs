@@ -87,11 +87,11 @@ if (app.Services.GetService<IHttpContextAccessor>() != null)
 
 app.UseHttpsRedirection();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors("AllowSpecific");
 
 app.UseAuthentication();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthorization();
 
 

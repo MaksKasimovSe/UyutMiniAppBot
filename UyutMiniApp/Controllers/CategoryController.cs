@@ -12,11 +12,11 @@ namespace UyutMiniApp.Controllers
         public async Task AddAsync(CreateCategoryDto dto) =>
             await categoryService.AddAsync(dto);
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllCategories() =>
             Ok(await categoryService.GetAllAsync());
         
-        [HttpGet("stock")]
+        [HttpGet("stock"), AllowAnonymous]
         public async Task<IActionResult> GetAllStockCategories() =>
             Ok(await categoryService.GetAllStockAsync());
 
