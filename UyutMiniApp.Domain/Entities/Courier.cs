@@ -1,5 +1,4 @@
 ﻿using UyutMiniApp.Domain.Commons;
-using UyutMiniApp.Domain.Enums;
 
 namespace UyutMiniApp.Domain.Entities
 {

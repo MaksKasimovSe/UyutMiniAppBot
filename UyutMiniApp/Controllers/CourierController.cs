@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System.Diagnostics.Metrics;
-using System.Net;
-using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.DTOs.Couriers;
 using UyutMiniApp.Service.DTOs.Users;
@@ -11,7 +8,6 @@ using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 using UyutMiniApp.Signalr;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UyutMiniApp.Controllers
 {

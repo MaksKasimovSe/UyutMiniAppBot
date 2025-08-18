@@ -1,4 +1,5 @@
-﻿using UyutMiniApp.Service.DTOs.Category;
+﻿using UyutMiniApp.Domain.Enums;
+using UyutMiniApp.Service.DTOs.Category;
 
 namespace UyutMiniApp.Service.Interfaces
 {
@@ -7,7 +8,7 @@ namespace UyutMiniApp.Service.Interfaces
         Task AddAsync(CreateCategoryDto dto);
         Task EditAsync(Guid id, UpdateCategoryDto dto);
         Task DeleteAsync(Guid id);
-        Task<List<ViewCategoryDto>> GetAllAsync();
+        Task<List<ViewCategoryDto>> GetAllAsync(CategoryFor categoryFor);
         Task<List<ViewCategoryDto>> GetAllStockAsync();
     }
 }

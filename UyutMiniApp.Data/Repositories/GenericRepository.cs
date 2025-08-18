@@ -16,10 +16,10 @@ namespace UyutMiniApp.Data.Repositories
             this.dbSet = dbContext.Set<T>();
         }
 
-        public async ValueTask<T> CreateAsync(T entity) =>
+        public async Task<T> CreateAsync(T entity) =>
             (await dbContext.AddAsync(entity)).Entity;
 
-        public async ValueTask<bool> DeleteAsync(Expression<Func<T, bool>> expression)
+        public async Task<bool> DeleteAsync(Expression<Func<T, bool>> expression)
         {
             var entity = await GetAsync(expression);
 
@@ -48,7 +48,7 @@ namespace UyutMiniApp.Data.Repositories
             return query;
         }
 
-        public async ValueTask<T> GetAsync(Expression<Func<T, bool>> expression, string[] includes = null, bool isTracking = true) =>
+        public async Task<T> GetAsync(Expression<Func<T, bool>> expression, string[] includes = null, bool isTracking = true) =>
             await GetAll(true, expression, includes).FirstOrDefaultAsync();
 
         public T Update(T entity) =>

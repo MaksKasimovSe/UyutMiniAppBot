@@ -23,6 +23,7 @@ namespace UyutMiniApp.Extensions
             services.AddScoped<IGenericRepository<MenuItem>, GenericRepository<MenuItem>>();
             services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
             services.AddScoped<IGenericRepository<SavedAddress>, GenericRepository<SavedAddress>>();
+            services.AddScoped<IGenericRepository<Basket>, GenericRepository<Basket>>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
@@ -32,6 +33,7 @@ namespace UyutMiniApp.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IMenuItemService, MenuItemService>();
             services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<IBasketService, BasketService>();
         }
 
         public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)

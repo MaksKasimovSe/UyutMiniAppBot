@@ -1,4 +1,3 @@
-using UyutMiniApp.Domain.Entities;
 namespace UyutMiniApp.Service.DTOs.Users;
 public class ViewUserDto
 {

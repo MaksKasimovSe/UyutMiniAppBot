@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using UyutMiniApp.Service.DTOs.Ingredients;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
-using UyutMiniApp.Service.Services;
 
 namespace UyutMiniApp.Controllers
 {
-    [ApiController, Route("[controller]")] 
+    [ApiController, Route("[controller]")]
     public class IngredientController(IIngredientService ingredientService) : ControllerBase
     {
         [HttpPost, Authorize(Roles = "Admin")]
