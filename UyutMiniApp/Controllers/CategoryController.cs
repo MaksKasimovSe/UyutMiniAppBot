@@ -31,8 +31,8 @@ namespace UyutMiniApp.Controllers
         }
 
         [HttpGet, AllowAnonymous]
-        public async Task<IActionResult> GetAllCategories() =>
-            Ok(await categoryService.GetAllAsync());
+        public async Task<IActionResult> GetAllCategories([FromQuery] CategoryFor categoryFor) =>
+            Ok(await categoryService.GetAllAsync(categoryFor));
         
         [HttpGet("stock"), AllowAnonymous]
         public async Task<IActionResult> GetAllStockCategories() =>
