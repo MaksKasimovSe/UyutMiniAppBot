@@ -44,7 +44,6 @@ namespace UyutMiniApp.Service.Services
                 }
             }
 
-
             var newOrder = dto.Adapt<Order>();
 
             newOrder.Status = OrderStatus.Pending;
@@ -88,7 +87,45 @@ namespace UyutMiniApp.Service.Services
 
             var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking: false);
 
-            return newOrder.Adapt<ViewOrderDto>();
+            var basket = await basketRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, ["MenuItemsBaskets"]);
+
+            if (basket.MenuItemsBaskets is not null)
+                basket.MenuItemsBaskets.Clear();
+
+            var admins = await userRepository.GetAll(false, u => u.Role == Role.Admin).ToListAsync();
+
+            try
+            {
+                string botToken = "8474382015:AAGGc8vkX8Sf19mpG3ghHE7LmJQcAqvwx3E";
+                string messageText =
+                    $"Новый заказ на имя: {resOrder.User.Name}\n\nНомер заказа: {resOrder.OrderNumber}\nАддресс: {resOrder.DeliveryInfo.Address}\nНомер телефона: {resOrder.User.PhoneNumber}\n\nПозиции:\n";
+                string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
+                foreach (var meals in resOrder.Items)
+                {
+                    messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
+                }
+                messageText += $"\n\n Коментарий: {resOrder.DeliveryInfo.Comment}\n\n";
+                messageText += "Для принятия заказа подойдите к кассе";
+                foreach (var c in admins)
+                {
+                    var payload = new
+                    {
+                        chat_id = c.TelegramUserId,
+                        text = messageText,
+                    };
+
+                    using var client = new HttpClient();
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    string responseText = await response.Content.ReadAsStringAsync();
+                }
+            }
+            catch
+            {
+
+            }
+
+            return resOrder.Adapt<ViewOrderDto>();
         }
 
         public async Task<ViewOrderDto> GetAsync(Guid id)
@@ -209,44 +246,16 @@ namespace UyutMiniApp.Service.Services
         public async Task SetPaymentMethod(Guid orderId, PaymentMethod paymentMethod)
         {
             var existOrder = await genericRepository.GetAsync(o => o.Id == orderId, includes: ["Items", "Items.MenuItem", "User", "DeliveryInfo"]);
-            var admins = await userRepository.GetAll(false, u => u.Role == Role.Admin).ToListAsync();
 
             if (existOrder is null)
                 throw new HttpStatusCodeException(404, "Order not found");
             existOrder.PaymentMethod = paymentMethod;
             genericRepository.Update(existOrder);
 
-            var basket = await basketRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId);
-
-            basket.MenuItemsBaskets.Clear();
+            
 
             await genericRepository.SaveChangesAsync();
 
-
-
-            string botToken = "8474382015:AAGGc8vkX8Sf19mpG3ghHE7LmJQcAqvwx3E";
-            string messageText =
-                $"Новый заказ на имя: {existOrder.User.Name}\n\nНомер заказа: {existOrder.OrderNumber}\nАддресс: {existOrder.DeliveryInfo.Address}\nНомер телефона: {existOrder.User.PhoneNumber}\n\nПозиции:\n";
-            string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
-            foreach (var meals in existOrder.Items)
-            {
-                messageText += $"{meals.MenuItem.Name} {meals.MenuItem.Price}₩\n";
-            }
-            messageText += $"\n\n Коментарий: {existOrder.DeliveryInfo.Comment}\n\n";
-            messageText += "Для принятия заказа подойдите к кассе";
-            foreach (var c in admins)
-            {
-                var payload = new
-                {
-                    chat_id = c.TelegramUserId,
-                    text = messageText,
-                };
-
-                using var client = new HttpClient();
-                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(url, content);
-                string responseText = await response.Content.ReadAsStringAsync();
-            }
         }
     }
 }
