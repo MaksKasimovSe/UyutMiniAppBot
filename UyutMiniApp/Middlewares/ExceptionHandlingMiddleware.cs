@@ -46,12 +46,18 @@ namespace UyutMiniApp.Middlewares
 
                 using var scope = scopeFactory.CreateScope();
                 var userRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<User>>();
+                var courierRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<Courier>>();
                 
                 if (allowAnon is not null)
                     await this.next.Invoke(context);
 
                 else if (configuration["IsWorking"] == "true" || role == "Admin")
                 {
+                    if (role == "Courier")
+                    {
+                        await this.next.Invoke(context);
+                        return;
+                    }
                     var userRole = (Role)Enum.Parse(typeof(Role), role); 
                     if (await userRepository.GetAsync(u => u.Id == userId && u.Role == userRole, isTracking: false) is not null)
                         await this.next.Invoke(context);
