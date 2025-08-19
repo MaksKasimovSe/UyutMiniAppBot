@@ -35,17 +35,38 @@ namespace UyutMiniApp.Controllers
             await categoryService.AddAsync(dto);
         }
 
+        /// <summary>
+        /// Get categories with menu items
+        /// </summary>
+        /// <param name="categoryFor"></param>
+        /// <returns></returns>
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllCategories([FromQuery] CategoryFor categoryFor) =>
             Ok(await categoryService.GetAllAsync(categoryFor));
         
+        /// <summary>
+        /// Get categories without menu items
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("stock"), AllowAnonymous]
         public async Task<IActionResult> GetAllStockCategories() =>
             Ok(await categoryService.GetAllStockAsync());
 
+        /// <summary>
+        /// Delete category (Admins only)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task DeleteAsync(Guid id) =>
             await categoryService.DeleteAsync(id);
+
+        /// <summary>
+        /// Edit category (Admins only)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task UpdateAsync(Guid id, [FromForm] UpdateCategoryDto dto)
         {
