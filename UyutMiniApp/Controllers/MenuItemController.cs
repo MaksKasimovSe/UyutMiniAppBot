@@ -9,10 +9,20 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class MenuItemController(IMenuItemService menuItemService) : ControllerBase
     {
+        /// <summary>
+        /// Get all menu items
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllAsync([FromQuery] string search = "") =>
             Ok(await menuItemService.GetAllAsync(search));
 
+        /// <summary>
+        /// Create new menu item (Admins only)
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost, Authorize(Roles = "Admin")]
         public async Task AddAsync([FromForm] CreateMenuItemDto dto)
         {
@@ -33,6 +43,12 @@ namespace UyutMiniApp.Controllers
             await menuItemService.CreateAsync(dto);
         }
 
+        /// <summary>
+        /// Update menu item (Admins only)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task UpdateAsync(Guid id, [FromForm] UpdateMenuItemDto dto)
         {
@@ -52,6 +68,12 @@ namespace UyutMiniApp.Controllers
 
             await menuItemService.UpdateAsync(id, dto);
         }
+
+        /// <summary>
+        /// Delete menu item (Admins only)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task DeleteAsync(Guid id) =>
             await menuItemService.DeleteAsync(id);

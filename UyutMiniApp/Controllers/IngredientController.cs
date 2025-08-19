@@ -9,6 +9,11 @@ namespace UyutMiniApp.Controllers
     [ApiController, Route("[controller]")]
     public class IngredientController(IIngredientService ingredientService) : ControllerBase
     {
+        /// <summary>
+        /// Add ingredient (Admins only)
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost, Authorize(Roles = "Admin")]
         public async Task AddAsync([FromForm] CreateIngredientDto dto)
         {
@@ -29,6 +34,12 @@ namespace UyutMiniApp.Controllers
             await ingredientService.CreateAsync(dto);
         }
 
+        /// <summary>
+        /// Edit ingredient (Admins only)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task UpdateAsync([FromRoute] Guid id, [FromForm] UpdateIngredientDto dto)
         {
@@ -48,14 +59,28 @@ namespace UyutMiniApp.Controllers
             await ingredientService.UpdateAsync(id, dto);
         }
 
+        /// <summary>
+        /// Get ingredient by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetAsync([FromRoute] Guid id) =>
             Ok(await ingredientService.GetAsync(id));
 
+        /// <summary>
+        /// Delete ingredient (Admins only)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task DeleteAsync([FromRoute] Guid id) =>
             await ingredientService.DeleteAsync(id);
 
+        /// <summary>
+        /// Get all ingredient
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllAsync() =>
             Ok(await ingredientService.GetAllAsync());

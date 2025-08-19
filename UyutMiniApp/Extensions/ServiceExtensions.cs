@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Data.Repositories;
@@ -67,6 +68,8 @@ namespace UyutMiniApp.Extensions
         {
             services.AddSwaggerGen(p =>
             {
+                var xml = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                p.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xml));
                 p.ResolveConflictingActions(ad => ad.FirstOrDefault());
                 p.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {

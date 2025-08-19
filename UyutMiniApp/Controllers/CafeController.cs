@@ -10,6 +10,9 @@ namespace UyutMiniApp.Controllers
     {
         private readonly string _filePath = "appsettings.json";
 
+        /// <summary>
+        /// Open cafe (Admins only)
+        /// </summary>
         [HttpPatch("open"), Authorize(Roles = "Admin")]
         public void OpenCafe()
         {
@@ -21,6 +24,9 @@ namespace UyutMiniApp.Controllers
             System.IO.File.WriteAllText(_filePath, jsonObject.ToJsonString(options));
         }
 
+        /// <summary>
+        /// Close cafe (Admins only)
+        /// </summary>
         [HttpPatch("close"), Authorize(Roles = "Admin")]
         public void CloseCafe()
         {
@@ -31,6 +37,11 @@ namespace UyutMiniApp.Controllers
             var options = new JsonSerializerOptions { WriteIndented = true };
             System.IO.File.WriteAllText(_filePath, jsonObject.ToJsonString(options));
         }
+
+        /// <summary>
+        /// Get if cafe is working
+        /// </summary>
+        /// <returns>true or false</returns>
         [HttpGet, AllowAnonymous]
         public IActionResult Get()
         {
