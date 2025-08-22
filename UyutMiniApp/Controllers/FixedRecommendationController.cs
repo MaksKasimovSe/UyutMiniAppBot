@@ -21,7 +21,7 @@ namespace UyutMiniApp.Controllers
             await fixedRecomendationsService.DeleteAsync(id);
 
         [HttpGet]
-        public async Task GetTaskAsync() =>
-            await fixedRecomendationsService.GetAllAsync();
+        public async Task<IActionResult> GetTaskAsync() =>
+            Ok(await fixedRecomendationsService.GetAllAsync());
     }
 }
