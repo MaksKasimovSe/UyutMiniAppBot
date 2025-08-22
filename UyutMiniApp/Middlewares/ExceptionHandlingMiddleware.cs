@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Security.Claims;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Domain.Enums;
 using UyutMiniApp.Service.Exceptions;
-using UyutMiniApp.Service.Helpers;
-using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Middlewares
 {
@@ -42,12 +39,12 @@ namespace UyutMiniApp.Middlewares
                 bool canParse = Guid.TryParse(value, out Guid id);
                 Guid? userId = canParse ? id : null;
                 var role = context?.User.FindFirst(ClaimTypes.Role)?.Value;
-                
+
 
                 using var scope = scopeFactory.CreateScope();
                 var userRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<User>>();
                 var courierRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<Courier>>();
-                
+
                 if (allowAnon is not null)
                     await this.next.Invoke(context);
 
@@ -58,7 +55,7 @@ namespace UyutMiniApp.Middlewares
                         await this.next.Invoke(context);
                         return;
                     }
-                    var userRole = (Role)Enum.Parse(typeof(Role), role); 
+                    var userRole = (Role)Enum.Parse(typeof(Role), role);
                     if (await userRepository.GetAsync(u => u.Id == userId && u.Role == userRole, isTracking: false) is not null)
                         await this.next.Invoke(context);
 

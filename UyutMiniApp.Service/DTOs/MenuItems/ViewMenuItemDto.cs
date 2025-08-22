@@ -1,4 +1,5 @@
 using UyutMiniApp.Service.DTOs.SetItems;
+using UyutMiniApp.Service.DTOs.Topings;
 
 namespace UyutMiniApp.Service.DTOs.MenuItems;
 public class ViewMenuItemDto
@@ -11,4 +12,5 @@ public class ViewMenuItemDto
     public bool IsSet { get; set; }
     public Guid CategoryId { get; set; }
     public ICollection<ViewSetItemDto> SetItems { get; set; }
+    public ICollection<ViewTopingDto> Topings { get; set; }
 }

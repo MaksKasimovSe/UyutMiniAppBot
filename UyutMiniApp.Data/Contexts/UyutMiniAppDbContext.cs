@@ -25,6 +25,8 @@ namespace UyutMiniApp.Data.Contexts
             SavedAddresses.IgnoreAutoIncludes();
         }
 
+        public DbSet<Toping> Topings { get; set; }
+        public DbSet<FixedRecomendation> FixedRecomendations { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Courier> Couriers { get; set; }
         public DbSet<Category> Categories { get; set; }

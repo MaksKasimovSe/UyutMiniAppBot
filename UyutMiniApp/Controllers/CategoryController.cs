@@ -11,7 +11,7 @@ namespace UyutMiniApp.Controllers
     public class CategoryController(ICategoryService categoryService) : ControllerBase
     {
         /// <summary>
-        /// Create new category (admin only)
+        /// Salam aleykum
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -43,7 +43,7 @@ namespace UyutMiniApp.Controllers
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllCategories([FromQuery] CategoryFor categoryFor) =>
             Ok(await categoryService.GetAllAsync(categoryFor));
-        
+
         /// <summary>
         /// Get categories without menu items
         /// </summary>

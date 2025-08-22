@@ -26,5 +26,6 @@ namespace UyutMiniApp.Domain.Entities
 
         public Guid? CourierId { get; set; }
         public Courier Courier { get; set; }
+        public ICollection<OrderItemToping> SelectedTopings { get; set; }
     }
 }

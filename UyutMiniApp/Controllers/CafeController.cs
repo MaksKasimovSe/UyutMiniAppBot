@@ -48,6 +48,6 @@ namespace UyutMiniApp.Controllers
             var isWorking = configuration["IsWorking"];
 
             return Ok(isWorking);
-        } 
+        }
     }
 }

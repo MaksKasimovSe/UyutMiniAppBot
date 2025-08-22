@@ -41,7 +41,7 @@ namespace UyutMiniApp.Controllers
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task UpdateAsync(Guid id, UpdateCourierDto dto) =>
             await courierService.UpdateAsync(id, dto);
-        
+
         /// <summary>
         /// Delete courier account (Admins only)
         /// </summary>

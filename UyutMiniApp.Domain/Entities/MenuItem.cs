@@ -14,7 +14,8 @@ namespace UyutMiniApp.Domain.Entities
         public bool IsSet { get; set; } = false;
 
         public Guid CategoryId { get; set; }
-
+        public bool HasTopings { get; set; }
         public ICollection<SetItem> SetItems { get; set; }
+        public ICollection<Toping> Topings { get; set; }
     }
 }

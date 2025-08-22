@@ -19,5 +19,6 @@ public class CreateOrderDto
     [Required]
     public ICollection<CreateOrderItemDto> Items { get; set; }
     public ICollection<CreateSetReplacementSelectionDto> SetReplacements { get; set; }
+    public ICollection<CreateOrderItemTopingDto> SelectedTopings { get; set; }
     public CreateDeliveryInfoDto DeliveryInfo { get; set; }
 }

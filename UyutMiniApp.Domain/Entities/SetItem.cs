@@ -9,8 +9,7 @@ namespace UyutMiniApp.Domain.Entities
         public Guid IncludedItemId { get; set; }
         public MenuItem IncludedItem { get; set; }
         public bool IsReplaceable { get; set; } = false;
-
+        public bool IsMain { get; set; } = true;
         public ICollection<SetItemReplacementOption> ReplacementOptions { get; set; }
     }
-
 }

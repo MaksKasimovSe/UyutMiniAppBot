@@ -17,7 +17,8 @@ namespace UyutMiniApp.Service.Services
         IGenericRepository<User> userRepository,
         IGenericRepository<MenuItem> menuItemRepository,
         IGenericRepository<Courier> courierRepository,
-        IGenericRepository<Basket> basketRepository) : IOrderService
+        IGenericRepository<Basket> basketRepository,
+        IGenericRepository<Toping> topingRepository) : IOrderService
     {
         public async Task<ViewOrderDto> CreateAsync(CreateOrderDto dto)
         {
@@ -55,15 +56,49 @@ namespace UyutMiniApp.Service.Services
                 newOrder.OrderNumber = 1;
             else
                 newOrder.OrderNumber = ++lastOrder.OrderNumber;
-            //if (dto.Type == OrderType.Delivery)
-            //    totalPrice = totalPrice - newOrder.OrderNumber;
 
             var orders = genericRepository.GetAll(false, o => o.UserId == HttpContextHelper.UserId);
             if (orders.Count() == 0)
                 totalPrice -= (totalPrice / 100 * 10);
 
             totalPrice = Math.Floor(totalPrice);
+            if (dto.SetReplacements is not null && dto.SetReplacements.Count > 0)
+            {
+                foreach (var i in dto.SetReplacements)
+                {
+                    var replacedMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.ReplacementMenuItemId);
+                    var originalMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.OriginalSetItemId);
 
+                    if (replacedMenuItem is null)
+                        throw new HttpStatusCodeException(404,"Menu item choosen for replacement option was not found");
+
+                    if (originalMenuItem is null)
+                        throw new HttpStatusCodeException(404, "Original item of set not found");
+
+                    if (replacedMenuItem.Price != replacedMenuItem.Price)
+                    {
+                        totalPrice -= originalMenuItem.Price;
+                        totalPrice += replacedMenuItem.Price;
+                    }
+                }
+            }
+            if (dto.SelectedTopings is not null && dto.SelectedTopings.Count() > 0) 
+            {
+                foreach (var i in dto.SelectedTopings)
+                {
+                    var menuItem = await menuItemRepository.GetAsync(m => m.Id == i.MenuItemId);
+
+                    var toping = await topingRepository.GetAsync(t => t.Id == i.TopingId);
+                    
+                    if (menuItem is null)
+                        throw new HttpStatusCodeException(404, "Menu item choosen for toping was not found");
+
+                    if (toping is null)
+                        throw new HttpStatusCodeException(404, "Toping was not found");
+
+                    totalPrice += toping.Price;
+                }
+            }
             newOrder.TotalAmount = totalPrice;
 
             newOrder = await genericRepository.CreateAsync(newOrder);
@@ -85,7 +120,7 @@ namespace UyutMiniApp.Service.Services
             }
             await genericRepository.SaveChangesAsync();
 
-            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem"], isTracking: false);
+            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem", "SelectedTopings", "SelectedTopings.Toping", "SelectedTopings.MenuItem"], isTracking: false);
 
             var basket = await basketRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, ["MenuItemsBaskets"]);
 
@@ -252,10 +287,7 @@ namespace UyutMiniApp.Service.Services
             existOrder.PaymentMethod = paymentMethod;
             genericRepository.Update(existOrder);
 
-            
-
             await genericRepository.SaveChangesAsync();
-
         }
     }
 }
