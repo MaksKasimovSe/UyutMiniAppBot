@@ -7,6 +7,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task CreateAsync(CreateTopingDto dto);
         Task UpdateAsync(Guid id, CreateTopingDto dto);
         Task DeleteAsync(Guid id);
-        Task<IEnumerable<ViewTopingDto>> GetAllAsync();
+        Task<IEnumerable<ViewTopingDto>> GetAllAsync(Guid menuItemId);
     }
 }

@@ -30,9 +30,9 @@ namespace UyutMiniApp.Service.Services
             await genericRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ViewTopingDto>> GetAllAsync()
+        public async Task<IEnumerable<ViewTopingDto>> GetAllAsync(Guid menuItemId)
         {
-            var topings = await genericRepository.GetAll(false).ToListAsync();
+            var topings = await genericRepository.GetAll(false, t => t.MenuItemId == menuItemId).ToListAsync();
 
             return topings.Adapt<IEnumerable<ViewTopingDto>>();
         }
