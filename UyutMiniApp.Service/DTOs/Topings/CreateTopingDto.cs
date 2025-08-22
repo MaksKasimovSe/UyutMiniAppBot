@@ -7,6 +7,5 @@ namespace UyutMiniApp.Service.DTOs.Topings
         public string Name { get; set; }
         public decimal Price { get; set; }
         public Guid MenuItemId { get; set; }
-        public MenuItem MenuItem { get; set; }
     }
 }
