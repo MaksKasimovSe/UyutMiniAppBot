@@ -20,7 +20,7 @@ namespace UyutMiniApp.Controllers
         public async Task DeleteAsync([FromRoute] Guid id) =>
             await fixedRecomendationsService.DeleteAsync(id);
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetTaskAsync() =>
             Ok(await fixedRecomendationsService.GetAllAsync());
     }
