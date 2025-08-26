@@ -1,4 +1,4 @@
-﻿using UyutMiniApp.Service.DTOs.Basket;
+﻿using UyutMiniApp.Service.DTOs.Baskets;
 
 namespace UyutMiniApp.Service.Interfaces
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UyutMiniApp.Service.DTOs.Basket;
+using UyutMiniApp.Service.DTOs.Baskets;
 using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Controllers

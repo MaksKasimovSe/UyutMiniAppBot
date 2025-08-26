@@ -23,6 +23,9 @@ namespace UyutMiniApp.Data.Contexts
             SetReplacementSelections.IgnoreAutoIncludes();
             IngredientRecommendations.IgnoreAutoIncludes();
             SavedAddresses.IgnoreAutoIncludes();
+            Topings.IgnoreAutoIncludes();
+            BasketReplacementSelections.IgnoreAutoIncludes();
+            BasketTopings.IgnoreAutoIncludes();
         }
 
         public DbSet<Toping> Topings { get; set; }
@@ -30,6 +33,8 @@ namespace UyutMiniApp.Data.Contexts
         public DbSet<OrderItemToping> OrderItemTopings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Courier> Couriers { get; set; }
+        public DbSet<BasketReplacementSelection> BasketReplacementSelections { get; set; }
+        public DbSet<BasketToping> BasketTopings { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<SetItem> SetItems { get; set; }

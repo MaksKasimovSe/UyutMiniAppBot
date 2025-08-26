@@ -1,7 +1,7 @@
 ﻿using Mapster;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
-using UyutMiniApp.Service.DTOs.Basket;
+using UyutMiniApp.Service.DTOs.Baskets;
 using UyutMiniApp.Service.Exceptions;
 using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
@@ -62,7 +62,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task<ViewBasketDto> GetBasket()
         {
-            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, includes: ["MenuItemsBaskets", "MenuItemsBaskets.MenuItem"], isTracking: false);
+            var basket = await genericRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, includes: ["MenuItemsBaskets", "MenuItemsBaskets.MenuItem", "MenuItemsBaskets.Topings", "MenuItemsBaskets.Topings.Toping", "MenuItemsBaskets.ReplacementSelection.ReplacementMenuItem"], isTracking: false);
             if (basket is null)
                 throw new HttpStatusCodeException(404, "Basket does not exist create it first");
 
