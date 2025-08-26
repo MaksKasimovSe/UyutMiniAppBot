@@ -18,8 +18,7 @@ public class ViewOrderDto
     public OrderStatus Status { get; set; }
     public OrderProcess OrderProcess { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
-    public ICollection<ViewOrderItemTopingDto> Items { get; set; }
-    public ICollection<ViewSetReplacementSelectionDto> SetReplacements { get; set; }
+    public ICollection<ViewOrderItemDto> Items { get; set; }
     public ICollection<ViewOrderItemTopingDto> SelectedTopings { get; set; }
     public ViewCourierDto Courier { get; set; }
     public ViewDeliveryInfoDto DeliveryInfo { get; set; }

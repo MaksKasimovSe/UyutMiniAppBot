@@ -8,5 +8,6 @@ namespace UyutMiniApp.Domain.Entities
         public decimal Price { get; set; }
         public Guid MenuItemId { get; set; }
         public MenuItem MenuItem { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UyutMiniApp.Service.DTOs.Topings;
+using UyutMiniApp.Service.Helpers;
 using UyutMiniApp.Service.Interfaces;
 
 namespace UyutMiniApp.Controllers
@@ -17,8 +18,45 @@ namespace UyutMiniApp.Controllers
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost, Authorize(Roles = "Admin")]
-        public async Task CreateAsync(CreateTopingDto dto) =>
+        public async Task CreateAsync([FromForm]CreateTopingDto dto)
+        {
+            string fileName = Guid.NewGuid().ToString("N") + ".png";
+            string filePath = Path.Combine(EnvironmentHelper.AttachmentPath, fileName);
+
+            if (!Directory.Exists(EnvironmentHelper.AttachmentPath))
+                Directory.CreateDirectory(EnvironmentHelper.AttachmentPath);
+
+            FileStream fileStream = System.IO.File.OpenWrite(filePath);
+
+            await dto.FormFile.CopyToAsync(fileStream);
+
+            await fileStream.FlushAsync();
+            fileStream.Close();
+            dto.ImageUrl = $"/images/{fileName}";
+
             await topingService.CreateAsync(dto);
+        }
+
+        [HttpPost("{id}"), Authorize(Roles = "Admin")]
+        public async Task UpdateAsync(Guid id, [FromForm] CreateTopingDto dto)
+        {
+            string fileName = Guid.NewGuid().ToString("N") + ".png";
+            string filePath = Path.Combine(EnvironmentHelper.AttachmentPath, fileName);
+
+            if (!Directory.Exists(EnvironmentHelper.AttachmentPath))
+                Directory.CreateDirectory(EnvironmentHelper.AttachmentPath);
+
+            FileStream fileStream = System.IO.File.OpenWrite(filePath);
+
+            await dto.FormFile.CopyToAsync(fileStream);
+
+            await fileStream.FlushAsync();
+            fileStream.Close();
+            dto.ImageUrl = $"/images/{fileName}";
+
+            await topingService.UpdateAsync(id, dto);
+        }
+
         /// <summary>
         /// Get topings
         /// </summary>

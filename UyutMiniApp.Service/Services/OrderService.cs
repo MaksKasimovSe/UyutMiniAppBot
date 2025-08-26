@@ -62,23 +62,27 @@ namespace UyutMiniApp.Service.Services
                 totalPrice -= (totalPrice / 100 * 10);
 
             totalPrice = Math.Floor(totalPrice);
-            if (dto.SetReplacements is not null && dto.SetReplacements.Count > 0)
+
+            foreach (var item in dto.Items)
             {
-                foreach (var i in dto.SetReplacements)
+                if (item.SetReplacements is not null && item.SetReplacements.Count > 0)
                 {
-                    var replacedMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.ReplacementMenuItemId);
-                    var originalMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.OriginalSetItemId);
-
-                    if (replacedMenuItem is null)
-                        throw new HttpStatusCodeException(404,"Menu item choosen for replacement option was not found");
-
-                    if (originalMenuItem is null)
-                        throw new HttpStatusCodeException(404, "Original item of set not found");
-
-                    if (replacedMenuItem.Price != replacedMenuItem.Price)
+                    foreach (var i in item.SetReplacements)
                     {
-                        totalPrice -= originalMenuItem.Price;
-                        totalPrice += replacedMenuItem.Price;
+                        var replacedMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.ReplacementMenuItemId);
+                        var originalMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.OriginalSetItemId);
+
+                        if (replacedMenuItem is null)
+                            throw new HttpStatusCodeException(404, "Menu item choosen for replacement option was not found");
+
+                        if (originalMenuItem is null)
+                            throw new HttpStatusCodeException(404, "Original item of set not found");
+
+                        if (replacedMenuItem.Price != replacedMenuItem.Price)
+                        {
+                            totalPrice -= originalMenuItem.Price;
+                            totalPrice += replacedMenuItem.Price;
+                        }
                     }
                 }
             }
@@ -120,7 +124,7 @@ namespace UyutMiniApp.Service.Services
             }
             await genericRepository.SaveChangesAsync();
 
-            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem", "SelectedTopings", "SelectedTopings.Toping", "SelectedTopings.MenuItem"], isTracking: false);
+            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem", "SelectedTopings", "SelectedTopings.Toping", "SelectedTopings.MenuItem", "Items.SetReplacements"], isTracking: false);
 
             var basket = await basketRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, ["MenuItemsBaskets"]);
 
