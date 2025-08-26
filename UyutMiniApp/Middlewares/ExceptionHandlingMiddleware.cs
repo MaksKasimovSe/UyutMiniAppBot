@@ -45,10 +45,10 @@ namespace UyutMiniApp.Middlewares
                 var userRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<User>>();
                 var courierRepository = scope.ServiceProvider.GetRequiredService<IGenericRepository<Courier>>();
 
+                var res = configuration["IsWorking"].ToString();
                 if (allowAnon is not null)
                     await this.next.Invoke(context);
-
-                else if (configuration["IsWorking"] == "true" || role == "Admin")
+                else if (configuration["IsWorking"].ToString().ToLower() == "true" || role == "Admin")
                 {
                     if (role == "Courier")
                     {
@@ -62,7 +62,7 @@ namespace UyutMiniApp.Middlewares
                     else
                         throw new HttpStatusCodeException(401, "Unauthorized");
                 }
-                else if (configuration["IsWorking"] == "false")
+                else if (configuration["IsWorking"].ToString().ToLower() == "false")
                     throw new HttpStatusCodeException(400, "Cafe is closed right now comeback later");
                 else
                     throw new HttpStatusCodeException(401, "Unauthorized");
