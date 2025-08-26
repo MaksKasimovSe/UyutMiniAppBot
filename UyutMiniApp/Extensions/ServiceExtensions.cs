@@ -27,6 +27,7 @@ namespace UyutMiniApp.Extensions
             services.AddScoped<IGenericRepository<Basket>, GenericRepository<Basket>>();
             services.AddScoped<IGenericRepository<Toping>, GenericRepository<Toping>>();
             services.AddScoped<IGenericRepository<FixedRecomendation>, GenericRepository<FixedRecomendation>>();
+            services.AddScoped<IGenericRepository<SetItem>, GenericRepository<SetItem>>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();

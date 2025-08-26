@@ -18,7 +18,8 @@ namespace UyutMiniApp.Service.Services
         IGenericRepository<MenuItem> menuItemRepository,
         IGenericRepository<Courier> courierRepository,
         IGenericRepository<Basket> basketRepository,
-        IGenericRepository<Toping> topingRepository) : IOrderService
+        IGenericRepository<Toping> topingRepository,
+        IGenericRepository<SetItem> setItemRepository) : IOrderService
     {
         public async Task<ViewOrderDto> CreateAsync(CreateOrderDto dto)
         {
@@ -70,7 +71,7 @@ namespace UyutMiniApp.Service.Services
                     foreach (var i in item.SetReplacements)
                     {
                         var replacedMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.ReplacementMenuItemId);
-                        var originalMenuItem = await menuItemRepository.GetAsync(m => m.Id == i.OriginalSetItemId);
+                        var originalMenuItem = await setItemRepository.GetAsync(m => m.Id == i.OriginalSetItemId, includes: ["MenuItem"]);
 
                         if (replacedMenuItem is null)
                             throw new HttpStatusCodeException(404, "Menu item choosen for replacement option was not found");
@@ -80,7 +81,7 @@ namespace UyutMiniApp.Service.Services
 
                         if (replacedMenuItem.Price != replacedMenuItem.Price)
                         {
-                            totalPrice -= originalMenuItem.Price;
+                            totalPrice -= originalMenuItem.MenuItem.Price;
                             totalPrice += replacedMenuItem.Price;
                         }
                     }
