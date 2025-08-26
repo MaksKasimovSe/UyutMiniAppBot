@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using UyutMiniApp.Data.IRepositories;
 using UyutMiniApp.Domain.Entities;
 using UyutMiniApp.Service.DTOs.MenuItems;
@@ -50,6 +51,17 @@ namespace UyutMiniApp.Service.Services
             FileHelper.Remove(existMenuItem.ImageUrl);
             var menuItems = genericRepository.Update(dto.Adapt(existMenuItem));
             await genericRepository.SaveChangesAsync();
+        }
+        public async Task<ViewMenuItemDto> GetSetVersionAsync(Guid id)
+        {
+            var menuItems = await genericRepository.GetAll(includes: ["SetItems", "Topings"], expression: m => m.IsSet).ToListAsync();
+
+            var menuItem = menuItems.FirstOrDefault(m => m.SetItems.FirstOrDefault(si => si.IncludedItemId == id && si.IsMain) is not null);
+
+            if (menuItem is null)
+                throw new HttpStatusCodeException(404, "No set found for given item");
+
+            return menuItem.Adapt<ViewMenuItemDto>();
         }
     }
 }

@@ -77,5 +77,10 @@ namespace UyutMiniApp.Controllers
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task DeleteAsync(Guid id) =>
             await menuItemService.DeleteAsync(id);
+
+        [HttpGet("set-version/{menuItemId}"), AllowAnonymous]
+        public async Task<IActionResult> GetSetVersionAsync(Guid menuItemId) =>
+            Ok(await menuItemService.GetSetVersionAsync(menuItemId));
+
     }
 }

@@ -8,5 +8,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task UpdateAsync(Guid id, UpdateMenuItemDto dto);
         Task DeleteAsync(Guid id);
         Task<IEnumerable<ViewMenuItemDto>> GetAllAsync(string search);
+        Task<ViewMenuItemDto> GetSetVersionAsync(Guid id);
     }
 }
