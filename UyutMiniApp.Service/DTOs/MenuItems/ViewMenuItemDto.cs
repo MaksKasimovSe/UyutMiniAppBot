@@ -11,6 +11,7 @@ public class ViewMenuItemDto
     public decimal Price { get; set; }
     public bool IsSet { get; set; }
     public Guid CategoryId { get; set; }
+    public bool HasSetVerion { get; set; }
     public ICollection<ViewSetItemDto> SetItems { get; set; }
     public ICollection<ViewTopingDto> Topings { get; set; }
 }

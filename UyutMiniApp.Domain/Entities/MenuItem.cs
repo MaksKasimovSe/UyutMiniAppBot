@@ -10,7 +10,7 @@ namespace UyutMiniApp.Domain.Entities
         public string Description { get; set; }
 
         public decimal Price { get; set; }
-
+        public bool HasSetVerion { get; set; }
         public bool IsSet { get; set; } = false;
 
         public Guid CategoryId { get; set; }
