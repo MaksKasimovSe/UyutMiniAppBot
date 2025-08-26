@@ -54,7 +54,7 @@ namespace UyutMiniApp.Service.Services
         }
         public async Task<ViewMenuItemDto> GetSetVersionAsync(Guid id)
         {
-            var menuItems = await genericRepository.GetAll(includes: ["SetItems", "Topings", "SetItems.IncludedItem", "SetItems.ReplacementOptions"], expression: m => m.IsSet).ToListAsync();
+            var menuItems = await genericRepository.GetAll(includes: ["SetItems", "Topings", "SetItems.IncludedItem", "SetItems.ReplacementOptions", "SetItems.ReplacementOptions.ReplacementMenuItem"], expression: m => m.IsSet).ToListAsync();
 
             var menuItem = menuItems.FirstOrDefault(m => m.SetItems.FirstOrDefault(si => si.IncludedItemId == id && si.IsMain) is not null);
 
