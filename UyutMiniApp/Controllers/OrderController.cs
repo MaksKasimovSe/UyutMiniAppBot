@@ -16,6 +16,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Create order enums values: 
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="createOrderDto">PaymentMethod should be (KakaoPay: 0, NaverPay: 1, Transfer: 2, Cash: 3), OrderType should be (In Kafe: 0, Delivery: 1)</param>
         /// <returns></returns>
         [HttpPost, Authorize(Roles = "User, Admin")]
@@ -30,6 +33,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Get order by id
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}"), Authorize(Roles = "User, Admin")]
@@ -39,6 +45,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Change order status (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="message"></param>
         /// <returns></returns>
         [HttpPost("send"), Authorize(Roles = "Admin")]
@@ -59,6 +68,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Upload order receipt (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="receiptImage"></param>
         /// <returns></returns>
@@ -87,6 +99,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Change process of delivery (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost("process"), Authorize(Roles = "Admin")]
@@ -102,6 +117,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Get todays orders
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <returns></returns>
         [HttpGet("today"), Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetTodaysOrders() =>

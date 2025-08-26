@@ -42,6 +42,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Get profile info by token
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <returns></returns>
         [HttpGet("self"), Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetSelfAsync() =>

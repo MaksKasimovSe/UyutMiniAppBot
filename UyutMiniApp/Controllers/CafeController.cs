@@ -26,6 +26,9 @@ namespace UyutMiniApp.Controllers
 
         /// <summary>
         /// Close cafe (Admins only)
+        /// /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// </summary>
         [HttpPatch("close"), Authorize(Roles = "Admin")]
         public void CloseCafe()
@@ -39,7 +42,7 @@ namespace UyutMiniApp.Controllers
         }
 
         /// <summary>
-        /// Get if cafe is working
+        /// Get if cafe is working returns true or false
         /// </summary>
         /// <returns>true or false</returns>
         [HttpGet, AllowAnonymous]

@@ -11,6 +11,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Create custom meal
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost, Authorize(Roles = "User, Admin")]
@@ -20,6 +23,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Get custom meal by id
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}"), Authorize(Roles = "User, Admin")]

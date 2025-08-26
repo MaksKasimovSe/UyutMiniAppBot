@@ -81,22 +81,30 @@ namespace UyutMiniApp.Extensions
                     Type = SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                });
-
-                p.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+                    Scheme = "bearer",
+                    Description = "JWT bearer auth",
+                    Reference = new OpenApiReference
                     {
-                        new OpenApiSecurityScheme()
-                        {
-                            Reference = new OpenApiReference()
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] { }
+                        Type = ReferenceType.SecurityScheme,
+                        Id = JwtBearerDefaults.AuthenticationScheme
                     }
                 });
+
+                //p.AddSecurityRequirement(new OpenApiSecurityRequirement
+                //{
+                //    {
+                //        new OpenApiSecurityScheme()
+                //        {
+                //            Reference = new OpenApiReference()
+                //            {
+                //                Type = ReferenceType.SecurityScheme,
+                //                Id = "Bearer"
+                //            }
+                //        },
+                //        new string[] { }
+                //    }
+                //});
+                p.OperationFilter<RequireAuthOperationFilter>();
             });
         }
     }

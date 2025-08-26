@@ -21,6 +21,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Create new menu item (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost, Authorize(Roles = "Admin")]
@@ -46,6 +49,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Update menu item (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -72,6 +78,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Delete menu item (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]

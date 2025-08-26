@@ -17,6 +17,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Register new courier (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost("register"), Authorize(Roles = "Admin")]
@@ -35,6 +38,12 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Change courier profile info (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -45,6 +54,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Delete courier account (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
@@ -54,6 +66,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Get courier info by telegram id 
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="telegramUserId"></param>
         /// <returns></returns>
         [HttpGet("{telegramUserId}"), Authorize(Roles = "Courier, Admin")]
@@ -63,6 +78,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Get all couriers (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <returns></returns>
         [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAsync() =>
@@ -71,6 +89,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Start working day for couriers
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <returns></returns>
         [HttpPatch("start-day"), Authorize(Roles = "Courier")]
         public async Task StartWorkingDay() =>
@@ -87,6 +108,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Start order delivery
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPatch("start-delivery/{orderId}"), Authorize(Roles = "Courier")]
@@ -110,6 +134,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Accept order for delivering
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPatch("accept-order/{orderId}"), Authorize(Roles = "Courier")]
@@ -125,6 +152,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Cancel order delivery
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPatch("reject-order/{orderId}"), Authorize(Roles = "Courier")]

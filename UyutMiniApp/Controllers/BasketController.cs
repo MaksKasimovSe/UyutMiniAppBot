@@ -11,6 +11,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Create basket for user
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost, Authorize(Roles = "User, Admin")]
@@ -30,6 +33,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Change the quantity of menu item in basket
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPut("item"), Authorize(Roles = "User, Admin")]
@@ -39,6 +45,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Remove menu item from basket 
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="itemId"></param>
         /// <returns></returns>
         [HttpDelete("item/{itemId}"), Authorize(Roles = "User, Admin")]
@@ -48,8 +57,12 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Receive users basket by id in token
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <returns></returns>
         [HttpGet, Authorize(Roles = "User, Admin")]
+        [ProducesResponseType(typeof(ViewBasketDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetBasketAsync() =>
             Ok(await basketService.GetBasket());
     }

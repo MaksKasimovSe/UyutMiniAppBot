@@ -13,6 +13,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Salam aleykum
         /// </summary>
+        /// /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost, Authorize(Roles = "Admin")]
@@ -55,6 +58,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Delete category (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
@@ -64,6 +70,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Edit category (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>

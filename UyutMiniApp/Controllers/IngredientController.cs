@@ -12,6 +12,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Add ingredient (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost, Authorize(Roles = "Admin")]
@@ -37,6 +40,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Edit ingredient (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -71,6 +77,9 @@ namespace UyutMiniApp.Controllers
         /// <summary>
         /// Delete ingredient (Admins only)
         /// </summary>
+        /// <remarks>
+        /// Auth required
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]

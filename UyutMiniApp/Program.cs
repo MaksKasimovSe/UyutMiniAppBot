@@ -76,8 +76,6 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
 app.UseStaticFiles();
 
 EnvironmentHelper.WebRootPath = app.Services.GetRequiredService<IWebHostEnvironment>()?.WebRootPath;
@@ -94,6 +92,9 @@ app.UseAuthentication();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthorization();
 
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/chathub").RequireAuthorization();
