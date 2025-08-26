@@ -62,8 +62,10 @@ namespace UyutMiniApp.Middlewares
                     else
                         throw new HttpStatusCodeException(401, "Unauthorized");
                 }
-                else
+                else if (configuration["IsWorking"] == "false")
                     throw new HttpStatusCodeException(400, "Cafe is closed right now comeback later");
+                else
+                    throw new HttpStatusCodeException(401, "Unauthorized");
             }
             catch (HttpStatusCodeException ex)
             {
