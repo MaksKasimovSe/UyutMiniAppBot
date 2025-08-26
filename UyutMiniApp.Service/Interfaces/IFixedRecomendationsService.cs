@@ -8,6 +8,6 @@ namespace UyutMiniApp.Service.Interfaces
         Task AddAsync(CreateFixedRecomendationDto dto);
         Task UpdateAsync(Guid id, CreateFixedRecomendationDto dto);
         Task DeleteAsync(Guid id);
-        Task<IEnumerable<ViewFixedRecomendationDto>> GetAllAsync();
+        Task<IEnumerable<IEnumerable<ViewFixedRecomendationDto>>> GetAllAsync();
     }
 }

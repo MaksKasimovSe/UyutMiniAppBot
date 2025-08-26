@@ -31,11 +31,12 @@ namespace UyutMiniApp.Service.Services
             await genericRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ViewFixedRecomendationDto>> GetAllAsync()
+        public async Task<IEnumerable<IEnumerable<ViewFixedRecomendationDto>>> GetAllAsync()
         {
             var fixedRecomnedations = await genericRepository.GetAll(false, includes: ["MenuItem"]).ToListAsync();
-
-            return fixedRecomnedations.Adapt<List<ViewFixedRecomendationDto>>();
+            var groupedRecs = 
+                fixedRecomnedations.GroupBy(f => f.MenuItem.CategoryId).Select(s => s.AsEnumerable());
+            return groupedRecs.Adapt<IEnumerable<IEnumerable<ViewFixedRecomendationDto>>>();
         }
 
         public async Task UpdateAsync(Guid id, CreateFixedRecomendationDto dto)
