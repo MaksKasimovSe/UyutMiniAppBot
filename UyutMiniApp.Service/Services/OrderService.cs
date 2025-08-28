@@ -125,7 +125,7 @@ namespace UyutMiniApp.Service.Services
             }
             await genericRepository.SaveChangesAsync();
 
-            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem", "SelectedTopings", "SelectedTopings.Toping", "SelectedTopings.MenuItem", "Items.SetReplacements"], isTracking: false);
+            var resOrder = await genericRepository.GetAsync(o => o.Id == newOrder.Id, includes: ["User", "Courier", "DeliveryInfo", "Items", "Items.MenuItem", "SelectedTopings", "SelectedTopings.Toping", "SelectedTopings.MenuItem", "Items.SetReplacements", "Items.SetReplacements.ReplacementMenuItem"], isTracking: false);
 
             var basket = await basketRepository.GetAsync(b => b.UserId == HttpContextHelper.UserId, ["MenuItemsBaskets"]);
 
