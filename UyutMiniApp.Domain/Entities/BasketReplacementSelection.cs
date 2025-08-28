@@ -16,5 +16,6 @@ namespace UyutMiniApp.Domain.Entities
 
         public Guid ReplacementMenuItemId { get; set; }
         public MenuItem ReplacementMenuItem { get; set; }
+        public int MarkUp { get; set; }
     }
 }

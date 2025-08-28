@@ -11,5 +11,6 @@ namespace UyutMiniApp.Service.DTOs.Baskets
     {
         public Guid OriginalSetItemId { get; set; }
         public MenuItem ReplacementMenuItem { get; set; }
+        public int MarkUp { get; set; }
     }
 }
