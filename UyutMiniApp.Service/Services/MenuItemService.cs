@@ -41,7 +41,7 @@ namespace UyutMiniApp.Service.Services
 
         public async Task UpdateAsync(Guid id, UpdateMenuItemDto dto)
         {
-            var existMenuItem = await genericRepository.GetAsync(mi => mi.Id == id);
+            var existMenuItem = await genericRepository.GetAsync(mi => mi.Id == id, ["SetItems"]);
             if (existMenuItem is null)
                 throw new HttpStatusCodeException(404, "Menu item not found");
 
