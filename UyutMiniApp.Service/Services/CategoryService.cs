@@ -61,7 +61,7 @@ namespace UyutMiniApp.Service.Services
                                                 .ThenInclude(si => si.IncludedItem)
                                         .Include(c => c.MenuItems)
                                             .ThenInclude(mi => mi.Topings)
-                                        .Include(c => c.Ingredients);
+                                        .Include(c => c.Ingredients).OrderBy(c => c.CreatedAt);
 
             var viewCategories = (await categories.ToListAsync()).Adapt<List<ViewCategoryDto>>();
 
