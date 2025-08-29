@@ -41,14 +41,14 @@ namespace UyutMiniApp.Service.Services
 
         public async Task UpdateAsync(Guid id, UpdateMenuItemDto dto)
         {
-            var existMenuItem = await genericRepository.GetAsync(mi => mi.Id == id, ["SetItems"]);
+            var existMenuItem = await genericRepository.GetAsync(mi => mi.Id == id);
             if (existMenuItem is null)
                 throw new HttpStatusCodeException(404, "Menu item not found");
 
             var alreadyExistMenuItem = await genericRepository.GetAsync(mi => mi.Name == dto.Name && mi.Id != id);
             if (alreadyExistMenuItem is not null)
                 throw new HttpStatusCodeException(404, "Menu item with given name already exist");
-            existMenuItem.SetItems.Clear();
+          
             FileHelper.Remove(existMenuItem.ImageUrl);
             var menuItems = genericRepository.Update(dto.Adapt(existMenuItem));
             await genericRepository.SaveChangesAsync();
