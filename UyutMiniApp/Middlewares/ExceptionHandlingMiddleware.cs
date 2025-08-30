@@ -47,18 +47,27 @@ namespace UyutMiniApp.Middlewares
 
                 var res = configuration["IsWorking"].ToString();
                 if (allowAnon is not null)
+                {
                     await this.next.Invoke(context);
+                    return;
+                }
                 else if (configuration["IsWorking"].ToString().ToLower() == "true" || role == "Admin")
                 {
-                    if (role == "Courier")
+                    if (role is not null)
                     {
-                        await this.next.Invoke(context);
-                        return;
-                    }
-                    var userRole = (Role)Enum.Parse(typeof(Role), role);
-                    if (await userRepository.GetAsync(u => u.Id == userId && u.Role == userRole, isTracking: false) is not null)
-                        await this.next.Invoke(context);
+                        if (role == "Courier")
+                        {
+                            await this.next.Invoke(context);
+                            return;
+                        }
+                        var userRole = (Role)Enum.Parse(typeof(Role), role);
 
+                        if (await userRepository.GetAsync(u => u.Id == userId && u.Role == userRole, isTracking: false) is not null)
+                            await this.next.Invoke(context);
+
+                        else
+                            throw new HttpStatusCodeException(401, "Unauthorized");
+                    }
                     else
                         throw new HttpStatusCodeException(401, "Unauthorized");
                 }

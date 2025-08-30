@@ -1,0 +1,3 @@
+2025-08-30 21:58:29.157 +09:00 [Error] [UyutMiniApp.Middlewares.ExceptionHandlingMiddleware] [] System.ArgumentNullException: Value cannot be null. (Parameter 'value')
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at UyutMiniApp.Middlewares.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context, IAuthorizationPolicyProvider policyProvider) in C:\Users\maks\source\repos\UyutMiniApp\UyutMiniApp\Middlewares\ExceptionHandlingMiddleware.cs:line 58
