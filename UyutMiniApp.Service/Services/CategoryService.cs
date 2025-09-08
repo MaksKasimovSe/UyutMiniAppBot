@@ -52,7 +52,7 @@ namespace UyutMiniApp.Service.Services
         public async Task<List<ViewCategoryDto>> GetAllAsync(CategoryFor categoryFor)
         {
             var categories = repository.GetAll(false, c => c.CategoryFor == categoryFor && c.Name != "Сеты")
-                                        .Include(c => c.MenuItems)
+                                        .Include(c => c.MenuItems.OrderBy(m => m.Name))
                                             .ThenInclude(mi => mi.SetItems)
                                                 .ThenInclude(si => si.ReplacementOptions)
                                                     .ThenInclude(ro => ro.ReplacementMenuItem)
