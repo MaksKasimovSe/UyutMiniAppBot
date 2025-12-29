@@ -136,7 +136,7 @@ namespace UyutMiniApp.Service.Services
 
             try
             {
-                string botToken = "8474382015:AAGGc8vkX8Sf19mpG3ghHE7LmJQcAqvwx3E";
+                string botToken = "[Token]";
                 string messageText =
                     $"Новый заказ на имя: {resOrder.User.Name}\n\nНомер заказа: {resOrder.OrderNumber}\nАддресс: {resOrder.DeliveryInfo.Address}\nНомер телефона: {resOrder.User.PhoneNumber}\n\nПозиции:\n";
                 string url = $"https://api.telegram.org/bot{botToken}/sendMessage";
